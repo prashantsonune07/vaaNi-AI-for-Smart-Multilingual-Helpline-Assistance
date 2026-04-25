@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: vaani-1092
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENROUTER_API_KEY
+        value: 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
+      - key: DB_PATH
+        value: /var/data/vaani.db
+    disk:
+      name: vaani-db
+      mountPath: /var/data
+      sizeGB: 1
