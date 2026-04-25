@@ -1029,10 +1029,13 @@ body::before {
 /* ════ LOGIN PAGE ════ */
 #login-overlay {
   position: fixed; inset: 0; z-index: 9999;
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  display: none; align-items: center; justify-content: center;
+  background: rgba(15,12,41,0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   overflow: hidden;
 }
+#login-overlay.open { display: flex; }
 #login-overlay::before {
   content: '';
   position: absolute; inset: 0;
@@ -1294,7 +1297,16 @@ body::before {
 
 <!-- ══ LOGIN OVERLAY ══ -->
 <div id="login-overlay">
-  <div class="login-box">
+  <!-- Close modal on backdrop click -->
+  <div style="position:absolute;inset:0;z-index:0" onclick="closeLoginModal()"></div>
+  <div class="login-box" style="position:relative;z-index:1">
+    <button onclick="closeLoginModal()" style="
+      position:absolute;top:16px;right:16px;
+      background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+      border-radius:8px;width:28px;height:28px;
+      font-size:14px;color:rgba(255,255,255,0.5);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:background 0.2s;" title="Close">✕</button>
     <div class="login-logo">
       <div class="login-logo-emblem">🎙️</div>
       <div class="login-logo-text">
@@ -1384,6 +1396,15 @@ body::before {
       border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--indigo)">
       <span>👤</span><span id="header-agent-name">Agent</span>
     </div>
+    <button id="header-login-btn" onclick="openLoginModal()" style="
+      background:linear-gradient(135deg,var(--saffron),var(--indigo));
+      border:none;border-radius:20px;padding:6px 14px;
+      font-size:11px;font-weight:700;font-family:var(--font);
+      color:#fff;cursor:pointer;display:flex;align-items:center;gap:5px;
+      box-shadow:0 3px 12px rgba(255,107,0,0.3);
+      transition:transform 0.15s,box-shadow 0.15s;letter-spacing:0.3px;">
+      🔐 Login
+    </button>
     <button class="logout-btn" id="logout-btn" onclick="doLogout()" style="display:none">
       ⬅️ Logout
     </button>
@@ -2614,48 +2635,49 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ══ LOGIN / LOGOUT ══
+function openLoginModal() {
+  const overlay = document.getElementById('login-overlay');
+  overlay.classList.add('open');
+  overlay.style.opacity = '0';
+  overlay.style.transition = 'opacity 0.3s ease';
+  setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+}
+
+function closeLoginModal() {
+  const overlay = document.getElementById('login-overlay');
+  overlay.style.transition = 'opacity 0.25s ease';
+  overlay.style.opacity = '0';
+  setTimeout(() => { overlay.classList.remove('open'); }, 250);
+}
+
 function doLogin() {
   const username = document.getElementById('login-username').value.trim();
   const phone    = document.getElementById('login-phone').value.replace(/\\D/g,'');
   const password = document.getElementById('login-password').value;
 
   let valid = true;
-
   document.getElementById('err-username').style.display = 'none';
   document.getElementById('err-phone').style.display    = 'none';
   document.getElementById('err-password').style.display = 'none';
 
-  if (!username) {
-    document.getElementById('err-username').style.display = 'block';
-    valid = false;
-  }
-  if (phone.length < 10) {
-    document.getElementById('err-phone').style.display = 'block';
-    valid = false;
-  }
-  if (!password) {
-    document.getElementById('err-password').style.display = 'block';
-    valid = false;
-  }
-
+  if (!username) { document.getElementById('err-username').style.display = 'block'; valid = false; }
+  if (phone.length < 10) { document.getElementById('err-phone').style.display = 'block'; valid = false; }
+  if (!password) { document.getElementById('err-password').style.display = 'block'; valid = false; }
   if (!valid) return;
 
-  // Store session
   sessionStorage.setItem('vaani_agent', username);
   sessionStorage.setItem('vaani_phone', phone);
 
-  // Hide overlay
-  const overlay = document.getElementById('login-overlay');
-  overlay.style.transition = 'opacity 0.4s ease';
-  overlay.style.opacity = '0';
-  setTimeout(() => { overlay.style.display = 'none'; }, 400);
+  // Close modal
+  closeLoginModal();
 
-  // Show agent chip + logout btn in header
-  document.getElementById('header-agent-name').textContent = username;
-  document.getElementById('agent-name-chip').style.display = 'flex';
-  document.getElementById('logout-btn').style.display      = 'flex';
+  // Update header
+  document.getElementById('header-agent-name').textContent  = username;
+  document.getElementById('agent-name-chip').style.display  = 'flex';
+  document.getElementById('logout-btn').style.display       = 'flex';
+  document.getElementById('header-login-btn').style.display = 'none';
 
-  // Update insights panel agent name
+  // Update insights panel
   document.getElementById('ins-agent-name').textContent   = username;
   document.getElementById('ins-agent-status').textContent = 'Karnataka 1092 · +91-' + phone.slice(0,5) + 'XXXXX';
 }
@@ -2663,14 +2685,10 @@ function doLogin() {
 function doLogout() {
   sessionStorage.removeItem('vaani_agent');
   sessionStorage.removeItem('vaani_phone');
-  document.getElementById('header-agent-name').textContent = 'Agent';
-  document.getElementById('agent-name-chip').style.display = 'none';
-  document.getElementById('logout-btn').style.display      = 'none';
-  const overlay = document.getElementById('login-overlay');
-  overlay.style.display  = 'flex';
-  overlay.style.opacity  = '0';
-  overlay.style.transition = 'opacity 0.4s ease';
-  setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+  document.getElementById('header-agent-name').textContent  = 'Agent';
+  document.getElementById('agent-name-chip').style.display  = 'none';
+  document.getElementById('logout-btn').style.display       = 'none';
+  document.getElementById('header-login-btn').style.display = 'flex';
   // Clear fields
   document.getElementById('login-username').value = '';
   document.getElementById('login-phone').value    = '';
@@ -2679,8 +2697,9 @@ function doLogout() {
 
 // Allow Enter key to submit login
 document.addEventListener('keydown', e => {
-  if (document.getElementById('login-overlay').style.display !== 'none') {
+  if (document.getElementById('login-overlay').classList.contains('open')) {
     if (e.key === 'Enter') doLogin();
+    if (e.key === 'Escape') closeLoginModal();
   }
 });
 
@@ -2706,16 +2725,16 @@ async function syncInsights() {
 syncInsights();
 setInterval(syncInsights, 15000);
 
-// Check if already logged in this session
+// Restore session on page load
 (function() {
   const agent = sessionStorage.getItem('vaani_agent');
   const phone = sessionStorage.getItem('vaani_phone');
   if (agent) {
-    document.getElementById('login-overlay').style.display = 'none';
-    document.getElementById('header-agent-name').textContent = agent;
-    document.getElementById('agent-name-chip').style.display = 'flex';
-    document.getElementById('logout-btn').style.display      = 'flex';
-    document.getElementById('ins-agent-name').textContent   = agent;
+    document.getElementById('header-agent-name').textContent  = agent;
+    document.getElementById('agent-name-chip').style.display  = 'flex';
+    document.getElementById('logout-btn').style.display       = 'flex';
+    document.getElementById('header-login-btn').style.display = 'none';
+    document.getElementById('ins-agent-name').textContent     = agent;
     if (phone) document.getElementById('ins-agent-status').textContent = 'Karnataka 1092 · +91-' + phone.slice(0,5) + 'XXXXX';
   }
 })();
