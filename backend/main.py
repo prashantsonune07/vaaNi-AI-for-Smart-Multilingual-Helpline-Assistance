@@ -1025,9 +1025,329 @@ body::before {
   margin-bottom: 10px;
 }
 @keyframes shimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+
+/* ════ LOGIN PAGE ════ */
+#login-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  overflow: hidden;
+}
+#login-overlay::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 20%, rgba(255,107,0,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 80%, rgba(45,63,191,0.25) 0%, transparent 60%);
+  pointer-events: none;
+}
+#login-overlay::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+.login-box {
+  position: relative; z-index: 2;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 28px;
+  padding: 48px 44px 40px;
+  width: 100%; max-width: 420px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+  animation: loginFadeIn 0.6s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes loginFadeIn {
+  from { opacity:0; transform: translateY(32px) scale(0.96); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
+}
+.login-logo {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 32px;
+}
+.login-logo-emblem {
+  width: 48px; height: 48px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--saffron), var(--indigo));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; box-shadow: 0 8px 24px rgba(255,107,0,0.35);
+  flex-shrink: 0;
+}
+.login-logo-text { flex: 1; }
+.login-logo-name {
+  font-size: 22px; font-weight: 800; color: #fff;
+  letter-spacing: -0.5px;
+}
+.login-logo-sub {
+  font-size: 11px; color: rgba(255,255,255,0.5);
+  letter-spacing: 0.3px; margin-top: 1px;
+}
+.login-title {
+  font-size: 26px; font-weight: 800; color: #fff;
+  letter-spacing: -0.5px; margin-bottom: 6px;
+}
+.login-subtitle {
+  font-size: 13px; color: rgba(255,255,255,0.45);
+  margin-bottom: 32px; line-height: 1.5;
+}
+.login-field {
+  margin-bottom: 16px;
+}
+.login-field label {
+  display: block;
+  font-size: 11px; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; color: rgba(255,255,255,0.45);
+  margin-bottom: 8px;
+}
+.login-input-wrap {
+  position: relative;
+}
+.login-input-wrap .field-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 15px; pointer-events: none; opacity: 0.5;
+}
+.login-input {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 13px 14px 13px 42px;
+  font-size: 14px; font-family: var(--font);
+  color: #fff; outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.login-input::placeholder { color: rgba(255,255,255,0.25); }
+.login-input:focus {
+  border-color: rgba(255,107,0,0.6);
+  background: rgba(255,255,255,0.1);
+  box-shadow: 0 0 0 3px rgba(255,107,0,0.12);
+}
+.login-input:focus + .field-focus-line { width: 100%; }
+.login-error {
+  font-size: 11px; color: #FF5252;
+  margin-top: 6px; padding-left: 4px;
+  display: none;
+}
+.login-btn-row {
+  display: flex; gap: 10px; margin-top: 28px;
+}
+.login-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #FF6B00, #e05500);
+  border: none; border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 14px; font-weight: 700; font-family: var(--font);
+  color: #fff; cursor: pointer;
+  box-shadow: 0 6px 24px rgba(255,107,0,0.35);
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(255,107,0,0.45);
+}
+.login-btn:active { transform: translateY(0); }
+.login-divider {
+  height: 1px; background: rgba(255,255,255,0.08);
+  margin: 28px 0 20px;
+}
+.login-footer {
+  font-size: 11px; color: rgba(255,255,255,0.3);
+  text-align: center; line-height: 1.6;
+}
+.login-footer strong { color: rgba(255,255,255,0.5); }
+/* Demo badge */
+.demo-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(45,63,191,0.3); border: 1px solid rgba(45,63,191,0.4);
+  border-radius: 20px; padding: 3px 10px;
+  font-size: 10px; font-weight: 600; color: rgba(160,180,255,0.8);
+  letter-spacing: 0.5px; margin-bottom: 28px;
+}
+
+/* ════ INSIGHTS PANEL ════ */
+.insights-card {
+  background: linear-gradient(135deg, #1a1033 0%, #0f1e5e 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px; padding: 22px;
+  color: #fff; position: relative; overflow: hidden;
+}
+.insights-card::before {
+  content: ''; position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(ellipse, rgba(255,107,0,0.15), transparent 70%);
+  pointer-events: none;
+}
+.insights-card::after {
+  content: ''; position: absolute;
+  bottom: -30px; left: -30px;
+  width: 160px; height: 160px;
+  background: radial-gradient(ellipse, rgba(45,63,191,0.2), transparent 70%);
+  pointer-events: none;
+}
+.insights-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 18px; position: relative; z-index: 1;
+}
+.insights-header-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: rgba(255,255,255,0.5);
+}
+.insights-live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #0D9E6B; box-shadow: 0 0 0 0 rgba(13,158,107,0.4);
+  animation: insightPulse 2s infinite; flex-shrink: 0;
+}
+@keyframes insightPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(13,158,107,0.5); }
+  70%  { box-shadow: 0 0 0 6px rgba(13,158,107,0); }
+  100% { box-shadow: 0 0 0 0 rgba(13,158,107,0); }
+}
+.insights-metric-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  margin-bottom: 16px; position: relative; z-index: 1;
+}
+.insight-metric {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; padding: 14px 12px;
+  text-align: center;
+  transition: background 0.2s;
+}
+.insight-metric:hover { background: rgba(255,255,255,0.09); }
+.insight-metric-val {
+  font-size: 22px; font-weight: 800;
+  letter-spacing: -0.5px; margin-bottom: 4px;
+}
+.insight-metric-lbl {
+  font-size: 10px; color: rgba(255,255,255,0.4);
+  font-weight: 500; letter-spacing: 0.5px;
+}
+.insights-activity {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px; padding: 14px;
+  margin-bottom: 14px; position: relative; z-index: 1;
+}
+.insights-activity-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+  text-transform: uppercase; color: rgba(255,255,255,0.35);
+  margin-bottom: 10px;
+}
+.activity-bar-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+}
+.activity-bar-label {
+  font-size: 10px; color: rgba(255,255,255,0.45); width: 60px; flex-shrink: 0;
+}
+.activity-bar-track {
+  flex: 1; height: 6px; background: rgba(255,255,255,0.08);
+  border-radius: 3px; overflow: hidden;
+}
+.activity-bar-fill {
+  height: 100%; border-radius: 3px;
+  transition: width 1s cubic-bezier(0.16,1,0.3,1);
+}
+.activity-bar-val {
+  font-size: 10px; color: rgba(255,255,255,0.4); width: 28px; text-align: right; flex-shrink: 0;
+}
+.insights-agent-row {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px; padding: 12px 14px;
+  position: relative; z-index: 1;
+}
+.insights-agent-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, #FF6B00, #2D3FBF);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.insights-agent-info { flex: 1; }
+.insights-agent-name { font-size: 13px; font-weight: 700; color: #fff; }
+.insights-agent-status { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+.insights-agent-badge {
+  font-size: 10px; font-weight: 700; padding: 3px 8px;
+  border-radius: 20px; background: rgba(13,158,107,0.2);
+  color: #12C882; border: 1px solid rgba(13,158,107,0.3);
+  letter-spacing: 0.5px;
+}
+
+/* ════ LOGOUT BTN IN HEADER ════ */
+.logout-btn {
+  background: rgba(224,32,32,0.1); border: 1px solid rgba(224,32,32,0.25);
+  border-radius: 20px; padding: 5px 12px;
+  font-size: 11px; font-weight: 700; font-family: var(--font);
+  color: var(--crimson); cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+  transition: background 0.2s, border-color 0.2s;
+  letter-spacing: 0.3px;
+}
+.logout-btn:hover { background: rgba(224,32,32,0.18); border-color: rgba(224,32,32,0.4); }
 </style>
 </head>
 <body>
+
+<!-- ══ LOGIN OVERLAY ══ -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-emblem">🎙️</div>
+      <div class="login-logo-text">
+        <div class="login-logo-name">VaaNi</div>
+        <div class="login-logo-sub">Karnataka 1092 AI Helpline · Government of Karnataka</div>
+      </div>
+    </div>
+
+    <div class="demo-badge">🔒 SECURE AGENT PORTAL</div>
+
+    <div class="login-title">Welcome back</div>
+    <div class="login-subtitle">Sign in to access the VaaNi helpline dashboard and begin handling citizen calls.</div>
+
+    <div class="login-field">
+      <label>Agent Username</label>
+      <div class="login-input-wrap">
+        <span class="field-icon">👤</span>
+        <input class="login-input" type="text" id="login-username" placeholder="e.g. agent.prashant" autocomplete="username" />
+      </div>
+      <div class="login-error" id="err-username">Please enter your username</div>
+    </div>
+
+    <div class="login-field">
+      <label>Phone Number</label>
+      <div class="login-input-wrap">
+        <span class="field-icon">📱</span>
+        <input class="login-input" type="tel" id="login-phone" placeholder="+91 XXXXX XXXXX" autocomplete="tel" />
+      </div>
+      <div class="login-error" id="err-phone">Please enter a valid 10-digit phone number</div>
+    </div>
+
+    <div class="login-field">
+      <label>Password</label>
+      <div class="login-input-wrap">
+        <span class="field-icon">🔑</span>
+        <input class="login-input" type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password" />
+      </div>
+      <div class="login-error" id="err-password">Please enter your password</div>
+    </div>
+
+    <div class="login-btn-row">
+      <button class="login-btn" onclick="doLogin()">
+        <span>🚀</span> Sign In to Dashboard
+      </button>
+    </div>
+
+    <div class="login-divider"></div>
+    <div class="login-footer">
+      <strong>Demo credentials:</strong> any username · any 10-digit phone · any password<br>
+      This portal is for authorised Karnataka Government agents only.
+    </div>
+  </div>
+</div>
 
 <!-- ══ HEADER ══ -->
 <header class="header">
@@ -1059,6 +1379,14 @@ body::before {
         letter-spacing:0.3px;
       ">🟢 LIVE AI</div>
     </div>
+    <div id="agent-name-chip" style="display:none;align-items:center;gap:6px;
+      background:var(--indigo-xl);border:1px solid rgba(45,63,191,0.15);
+      border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--indigo)">
+      <span>👤</span><span id="header-agent-name">Agent</span>
+    </div>
+    <button class="logout-btn" id="logout-btn" onclick="doLogout()" style="display:none">
+      ⬅️ Logout
+    </button>
   </div>
 </header>
 
@@ -1150,6 +1478,68 @@ body::before {
 
   <!-- ── LEFT MAIN COLUMN ── -->
   <div class="main-col">
+
+    <!-- ── INSIGHTS PANEL ── -->
+    <div class="insights-card">
+      <div class="insights-header">
+        <div class="insights-live-dot"></div>
+        <div class="insights-header-title">Live Dashboard Insights</div>
+        <div style="margin-left:auto;font-size:10px;color:rgba(255,255,255,0.3)" id="insights-time">—</div>
+      </div>
+
+      <div class="insights-metric-row">
+        <div class="insight-metric">
+          <div class="insight-metric-val" style="color:#FF9A4A" id="ins-total">0</div>
+          <div class="insight-metric-lbl">Total Calls</div>
+        </div>
+        <div class="insight-metric">
+          <div class="insight-metric-val" style="color:#12C882" id="ins-accuracy">—</div>
+          <div class="insight-metric-lbl">AI Accuracy</div>
+        </div>
+        <div class="insight-metric">
+          <div class="insight-metric-val" style="color:#FF5252" id="ins-escalated">0</div>
+          <div class="insight-metric-lbl">Escalated</div>
+        </div>
+      </div>
+
+      <div class="insights-activity">
+        <div class="insights-activity-title">Issue Category Breakdown</div>
+        <div class="activity-bar-row">
+          <div class="activity-bar-label">Ration Card</div>
+          <div class="activity-bar-track"><div class="activity-bar-fill" id="ab-ration" style="width:72%;background:linear-gradient(90deg,#FF6B00,#FF9A4A)"></div></div>
+          <div class="activity-bar-val" id="abv-ration">72%</div>
+        </div>
+        <div class="activity-bar-row">
+          <div class="activity-bar-label">Pension</div>
+          <div class="activity-bar-track"><div class="activity-bar-fill" id="ab-pension" style="width:55%;background:linear-gradient(90deg,#2D3FBF,#4A5DD9)"></div></div>
+          <div class="activity-bar-val" id="abv-pension">55%</div>
+        </div>
+        <div class="activity-bar-row">
+          <div class="activity-bar-label">Water</div>
+          <div class="activity-bar-track"><div class="activity-bar-fill" id="ab-water" style="width:38%;background:linear-gradient(90deg,#0D9E6B,#12C882)"></div></div>
+          <div class="activity-bar-val" id="abv-water">38%</div>
+        </div>
+        <div class="activity-bar-row">
+          <div class="activity-bar-label">Emergency</div>
+          <div class="activity-bar-track"><div class="activity-bar-fill" id="ab-emergency" style="width:18%;background:linear-gradient(90deg,#E02020,#FF5252)"></div></div>
+          <div class="activity-bar-val" id="abv-emergency">18%</div>
+        </div>
+        <div class="activity-bar-row">
+          <div class="activity-bar-label">Land Records</div>
+          <div class="activity-bar-track"><div class="activity-bar-fill" id="ab-land" style="width:29%;background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div></div>
+          <div class="activity-bar-val" id="abv-land">29%</div>
+        </div>
+      </div>
+
+      <div class="insights-agent-row">
+        <div class="insights-agent-avatar">👤</div>
+        <div class="insights-agent-info">
+          <div class="insights-agent-name" id="ins-agent-name">Agent</div>
+          <div class="insights-agent-status" id="ins-agent-status">Karnataka 1092 Helpline · On duty</div>
+        </div>
+        <div class="insights-agent-badge">● ONLINE</div>
+      </div>
+    </div>
 
     <!-- Citizen Voice Card -->
     <div class="card">
@@ -2222,6 +2612,113 @@ document.addEventListener('keydown', (e) => {
   const n = parseInt(e.key);
   if (n >= 1 && n <= 5) runScenario(n - 1);
 });
+
+// ══ LOGIN / LOGOUT ══
+function doLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const phone    = document.getElementById('login-phone').value.replace(/\\D/g,'');
+  const password = document.getElementById('login-password').value;
+
+  let valid = true;
+
+  document.getElementById('err-username').style.display = 'none';
+  document.getElementById('err-phone').style.display    = 'none';
+  document.getElementById('err-password').style.display = 'none';
+
+  if (!username) {
+    document.getElementById('err-username').style.display = 'block';
+    valid = false;
+  }
+  if (phone.length < 10) {
+    document.getElementById('err-phone').style.display = 'block';
+    valid = false;
+  }
+  if (!password) {
+    document.getElementById('err-password').style.display = 'block';
+    valid = false;
+  }
+
+  if (!valid) return;
+
+  // Store session
+  sessionStorage.setItem('vaani_agent', username);
+  sessionStorage.setItem('vaani_phone', phone);
+
+  // Hide overlay
+  const overlay = document.getElementById('login-overlay');
+  overlay.style.transition = 'opacity 0.4s ease';
+  overlay.style.opacity = '0';
+  setTimeout(() => { overlay.style.display = 'none'; }, 400);
+
+  // Show agent chip + logout btn in header
+  document.getElementById('header-agent-name').textContent = username;
+  document.getElementById('agent-name-chip').style.display = 'flex';
+  document.getElementById('logout-btn').style.display      = 'flex';
+
+  // Update insights panel agent name
+  document.getElementById('ins-agent-name').textContent   = username;
+  document.getElementById('ins-agent-status').textContent = 'Karnataka 1092 · +91-' + phone.slice(0,5) + 'XXXXX';
+}
+
+function doLogout() {
+  sessionStorage.removeItem('vaani_agent');
+  sessionStorage.removeItem('vaani_phone');
+  document.getElementById('header-agent-name').textContent = 'Agent';
+  document.getElementById('agent-name-chip').style.display = 'none';
+  document.getElementById('logout-btn').style.display      = 'none';
+  const overlay = document.getElementById('login-overlay');
+  overlay.style.display  = 'flex';
+  overlay.style.opacity  = '0';
+  overlay.style.transition = 'opacity 0.4s ease';
+  setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+  // Clear fields
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-phone').value    = '';
+  document.getElementById('login-password').value = '';
+}
+
+// Allow Enter key to submit login
+document.addEventListener('keydown', e => {
+  if (document.getElementById('login-overlay').style.display !== 'none') {
+    if (e.key === 'Enter') doLogin();
+  }
+});
+
+// ══ INSIGHTS LIVE CLOCK ══
+function updateInsightsClock() {
+  const now = new Date();
+  document.getElementById('insights-time').textContent =
+    now.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(updateInsightsClock, 1000);
+updateInsightsClock();
+
+// ══ INSIGHTS STATS SYNC ══
+async function syncInsights() {
+  try {
+    const r = await fetch('/stats');
+    const d = await r.json();
+    document.getElementById('ins-total').textContent     = d.total_calls || 0;
+    document.getElementById('ins-accuracy').textContent  = (d.accuracy_rate || 0) + '%';
+    document.getElementById('ins-escalated').textContent = d.escalated || 0;
+  } catch(e) {}
+}
+syncInsights();
+setInterval(syncInsights, 15000);
+
+// Check if already logged in this session
+(function() {
+  const agent = sessionStorage.getItem('vaani_agent');
+  const phone = sessionStorage.getItem('vaani_phone');
+  if (agent) {
+    document.getElementById('login-overlay').style.display = 'none';
+    document.getElementById('header-agent-name').textContent = agent;
+    document.getElementById('agent-name-chip').style.display = 'flex';
+    document.getElementById('logout-btn').style.display      = 'flex';
+    document.getElementById('ins-agent-name').textContent   = agent;
+    if (phone) document.getElementById('ins-agent-status').textContent = 'Karnataka 1092 · +91-' + phone.slice(0,5) + 'XXXXX';
+  }
+})();
 </script>
 </body>
 </html>
