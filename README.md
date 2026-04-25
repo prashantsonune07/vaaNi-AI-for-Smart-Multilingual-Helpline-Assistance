@@ -52,7 +52,7 @@ vaani/
 
 ## Live Demo
 
-🌐 [vaani-1092.onrender.com](https://vaani-1092.onrender.com)
+🌐 [https://vaani-ai-for-smart-multilingual-helpline.onrender.com](https://vaani-ai-for-smart-multilingual-helpline.onrender.com)
 
 ---
 
