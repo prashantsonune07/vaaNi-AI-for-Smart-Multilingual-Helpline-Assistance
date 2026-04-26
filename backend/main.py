@@ -16,7 +16,6 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 
 # ── DATABASE ──────────────────────────────────
 DB_PATH = os.environ.get("DB_PATH", "vaani.db")
-os.makedirs(os.path.dirname(DB_PATH), exist_ok=True) if os.path.dirname(DB_PATH) else None
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
@@ -2996,4 +2995,4 @@ async def create_admin_user(request: Request):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     print(f"\n  VaaNi running at http://localhost:{port}\n")
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
