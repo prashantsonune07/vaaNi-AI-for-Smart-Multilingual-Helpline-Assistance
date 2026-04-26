@@ -2764,41 +2764,47 @@ async def create_session(language: str = "kannada"):
 @app.post("/interpret")
 async def interpret_endpoint(request: Request):
     body = await request.json()
-    class req: text=body.get("text",""); language=body.get("language","kannada"); session_id=body.get("session_id","")
-    if req.session_id not in sessions:
-        sessions[req.session_id] = {"session_id": req.session_id, "language": req.language,
+    text = body.get("text", "")
+    language = body.get("language", "kannada")
+    session_id = body.get("session_id", "")
+    if session_id not in sessions:
+        sessions[session_id] = {"session_id": session_id, "language": language,
             "transcript": [], "escalated": False, "verified_count": 0, "correction_count": 0,
             "start_time": datetime.now().isoformat(), "last_interpretation": {}}
-    session = sessions[req.session_id]
-    result = await interpret(req.text, req.language)
+    session = sessions[session_id]
+    result = await interpret(text, language)
     session["last_interpretation"] = result
     if result.get("should_escalate") or session.get("correction_count", 0) >= 2:
         session["escalated"] = True; result["should_escalate"] = True
     db = get_db()
     db.execute("INSERT INTO transcripts (session_id, role, content, timestamp) VALUES (?, ?, ?, ?)",
-               (req.session_id, "citizen", req.text, datetime.now().isoformat()))
+               (session_id, "citizen", text, datetime.now().isoformat()))
     db.execute("UPDATE sessions SET issue_category=?, emotion=?, confidence=? WHERE id=?",
                (result.get("issue_category"), result.get("sentiment", {}).get("emotion"),
-                result.get("confidence"), req.session_id))
+                result.get("confidence"), session_id))
     db.commit(); db.close()
     return result
 
 @app.post("/feedback")
 async def record_feedback(request: Request):
     body = await request.json()
-    class req: session_id=body.get("session_id",""); type=body.get("type",""); original=body.get("original",""); corrected=body.get("corrected",""); language=body.get("language","kannada")
-    session = sessions.get(req.session_id, {})
+    session_id = body.get("session_id", "")
+    feedback_type = body.get("type", "")
+    original = body.get("original", "")
+    corrected = body.get("corrected", "")
+    language = body.get("language", "kannada")
+    session = sessions.get(session_id, {})
     db = get_db()
-    if req.type == "confirm":
+    if feedback_type == "confirm":
         session["verified_count"] = session.get("verified_count", 0) + 1
-        db.execute("UPDATE sessions SET verified_count=? WHERE id=?", (session["verified_count"], req.session_id))
+        db.execute("UPDATE sessions SET verified_count=? WHERE id=?", (session["verified_count"], session_id))
         db.execute("INSERT INTO learning_log (session_id, type, original, language, timestamp) VALUES (?, ?, ?, ?, ?)",
-                   (req.session_id, "confirm", req.original, req.language, datetime.now().isoformat()))
-    elif req.type == "correct":
+                   (session_id, "confirm", original, language, datetime.now().isoformat()))
+    elif feedback_type == "correct":
         session["correction_count"] = session.get("correction_count", 0) + 1
-        db.execute("UPDATE sessions SET correction_count=? WHERE id=?", (session["correction_count"], req.session_id))
+        db.execute("UPDATE sessions SET correction_count=? WHERE id=?", (session["correction_count"], session_id))
         db.execute("INSERT INTO learning_log (session_id, type, original, corrected, language, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
-                   (req.session_id, "correct", req.original, req.corrected, req.language, datetime.now().isoformat()))
+                   (session_id, "correct", original, corrected, language, datetime.now().isoformat()))
     db.commit(); db.close()
     return {"status": "recorded"}
 
@@ -2936,8 +2942,8 @@ function buildApi(){const eps=[{m:'GET',u:'/',c:'#0D9E6B',d:'Main dashboard'},{m
 @app.post("/admin/login")
 async def admin_login(request: Request):
     body = await request.json()
-    class req: password=body.get("password","")
-    return {"success": req.password == ADMIN_PASSWORD}
+    password = body.get("password", "")
+    return {"success": password == ADMIN_PASSWORD}
 
 @app.get("/admin/sessions")
 async def admin_sessions(pwd: str = ""):
@@ -2980,13 +2986,17 @@ async def admin_users(pwd: str = ""):
 @app.post("/admin/create-user")
 async def create_admin_user(request: Request):
     body = await request.json()
-    class req: username=body.get("username",""); password=body.get("password",""); full_name=body.get("full_name",""); role=body.get("role","admin"); admin_pwd=body.get("admin_pwd","")
-    if req.admin_pwd != ADMIN_PASSWORD:
+    username = body.get("username", "")
+    password = body.get("password", "")
+    full_name = body.get("full_name", "")
+    role = body.get("role", "admin")
+    admin_pwd = body.get("admin_pwd", "")
+    if admin_pwd != ADMIN_PASSWORD:
         return {"success": False, "error": "Wrong admin password"}
     db = get_db()
     try:
         db.execute("INSERT INTO admin_users (username,password,full_name,role,created_at) VALUES (?,?,?,?,?)",
-                   (req.username,req.password,req.full_name,req.role,datetime.now().isoformat()))
+                   (username, password, full_name, role, datetime.now().isoformat()))
         db.commit(); db.close()
         return {"success": True}
     except Exception as e:
