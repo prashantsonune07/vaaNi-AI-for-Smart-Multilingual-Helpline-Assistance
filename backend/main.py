@@ -17,6 +17,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 
 # ── DATABASE ──────────────────────────────────
 DB_PATH = os.environ.get("DB_PATH", "vaani.db")
+os.makedirs(os.path.dirname(DB_PATH), exist_ok=True) if os.path.dirname(DB_PATH) else None
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
@@ -52,6 +53,16 @@ def init_db():
             corrected TEXT,
             language TEXT,
             timestamp TEXT
+        );
+    """)
+    conn.executescript("""
+        CREATE TABLE IF NOT EXISTS admin_users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE,
+            password TEXT,
+            full_name TEXT,
+            role TEXT DEFAULT 'admin',
+            created_at TEXT
         );
     """)
     conn.commit()
@@ -2743,6 +2754,17 @@ setInterval(syncInsights, 15000);
 </html>
 """
 
+
+class AdminLogin(BaseModel):
+    password: str
+
+class CreateUser(BaseModel):
+    username: str
+    password: str
+    full_name: str = ""
+    role: str = "admin"
+    admin_pwd: str
+
 @app.get("/", response_class=HTMLResponse)
 async def serve_frontend():
     return HTMLResponse(content=FRONTEND_HTML)
@@ -2832,6 +2854,155 @@ async def ws(websocket: WebSocket, session_id: str):
                 await websocket.send_json({"type": "call_ended"}); break
     except WebSocketDisconnect:
         pass
+
+
+# ── ADMIN PANEL ───────────────────────────────
+@app.get("/admin", response_class=HTMLResponse)
+async def admin_panel():
+    html = open("admin.html").read() if __import__("os").path.exists("admin.html") else ADMIN_HTML_INLINE
+    return HTMLResponse(content=html)
+
+ADMIN_HTML_INLINE = """<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VaaNi Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;color:#1a1a2e}
+.hdr{background:linear-gradient(135deg,#FF6B00,#2D3FBF);color:white;padding:16px 28px;display:flex;align-items:center;justify-content:space-between}
+.hdr h1{font-size:20px;font-weight:800}.lb{max-width:380px;margin:80px auto;background:white;border-radius:16px;padding:32px;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+input,select{width:100%;padding:10px 14px;border:1.5px solid #dde1f0;border-radius:8px;font-size:14px;margin-bottom:14px;outline:none;font-family:inherit}
+input:focus{border-color:#2D3FBF}.btn{width:100%;padding:12px;background:linear-gradient(135deg,#FF6B00,#2D3FBF);color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
+.con{max-width:1200px;margin:0 auto;padding:24px}.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.sc{background:white;border-radius:12px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.06);text-align:center}.sn{font-size:32px;font-weight:800}
+.sl{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:#888;margin-top:4px}
+.tc{background:white;border-radius:12px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:20px}
+.tc h3{font-size:13px;font-weight:700;color:#2D3FBF;margin-bottom:14px;text-transform:uppercase;letter-spacing:.8px}
+table{width:100%;border-collapse:collapse;font-size:12px}th{background:#f0f4ff;padding:8px 12px;text-align:left;font-weight:700;color:#555;border-bottom:1px solid #e8eaf0}
+td{padding:8px 12px;border-bottom:1px solid #f0f2f8}tr:hover td{background:#f8f9ff}
+.b{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.bg{background:#e6f9f3;color:#0D9E6B}.br{background:#fff0f0;color:#E02020}.bb{background:#eef0fd;color:#2D3FBF}.ba{background:#fff8ec;color:#D97700}
+.rbtn{padding:6px 14px;background:#2D3FBF;color:white;border:none;border-radius:6px;font-size:11px;cursor:pointer;float:right;margin-top:-30px}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}.tab{padding:8px 18px;border-radius:8px;border:1.5px solid #dde1f0;background:white;font-size:12px;font-weight:600;cursor:pointer;color:#666}
+.tab.on{background:#2D3FBF;color:white;border-color:#2D3FBF}.sec{display:none}.sec.on{display:block}
+.sfm{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sfm input,.sfm select{margin:0}
+.fl label{font-size:11px;font-weight:700;color:#555;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.cbtn{padding:10px 20px;background:#0D9E6B;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-top:12px}
+.msg{padding:10px 14px;border-radius:8px;margin-top:10px;font-size:13px;font-weight:500}
+.mok{background:#e6f9f3;color:#0D9E6B}.mer{background:#fff0f0;color:#E02020}
+.ar{display:flex;gap:8px;margin-bottom:8px;align-items:center}.au{flex:1;padding:8px 12px;background:#f0f4ff;border-radius:6px;font-size:12px;font-family:monospace;color:#2D3FBF;border:1px solid #dde1f0}
+.cpb{padding:6px 12px;background:#FF6B00;color:white;border:none;border-radius:6px;font-size:11px;cursor:pointer}
+.mth{color:white;padding:4px 10px;border-radius:5px;font-size:10px;font-weight:700;min-width:44px;text-align:center}
+</style></head><body>
+<div id="lp">
+<div class="hdr"><h1>VaaNi Admin</h1></div>
+<div class="lb"><h2 style="color:#2D3FBF;margin-bottom:16px">Admin Login</h2>
+<input type="password" id="pi" placeholder="Admin password..." onkeydown="if(event.key==='Enter')login()"/>
+<button class="btn" onclick="login()">Login</button>
+<div id="lm" style="margin-top:10px;font-size:13px;color:red"></div></div></div>
+<div id="ap" style="display:none">
+<div class="hdr"><div><h1>VaaNi Admin Panel</h1><span style="font-size:11px;opacity:.7">1092 Karnataka Helpline</span></div>
+<button onclick="logout()" style="padding:6px 14px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:white;border-radius:6px;cursor:pointer;font-size:12px">Logout</button></div>
+<div class="con">
+<div class="sg"><div class="sc"><div class="sn" id="s1" style="color:#2D3FBF">0</div><div class="sl">Total Calls</div></div>
+<div class="sc"><div class="sn" id="s2" style="color:#0D9E6B">0</div><div class="sl">Confirmed</div></div>
+<div class="sc"><div class="sn" id="s3" style="color:#E02020">0</div><div class="sl">Corrections</div></div>
+<div class="sc"><div class="sn" id="s4" style="color:#FF6B00">0%</div><div class="sl">AI Accuracy</div></div></div>
+<div class="tabs">
+<button class="tab on" onclick="sw('sessions',this)">Sessions</button>
+<button class="tab" onclick="sw('transcripts',this)">Transcripts</button>
+<button class="tab" onclick="sw('learning',this)">Learning Log</button>
+<button class="tab" onclick="sw('superuser',this)">Superuser</button>
+<button class="tab" onclick="sw('api',this)">API Docs</button></div>
+<div class="sec on" id="t-sessions"><div class="tc"><h3>All Sessions <button class="rbtn" onclick="loadSessions()">Refresh</button></h3>
+<div style="overflow-x:auto"><table><thead><tr><th>Session ID</th><th>Language</th><th>Category</th><th>Emotion</th><th>Confidence</th><th>Verified</th><th>Corrections</th><th>Escalated</th><th>Time</th></tr></thead>
+<tbody id="sb"><tr><td colspan="9" style="text-align:center;color:#aaa;padding:20px">Loading...</td></tr></tbody></table></div></div></div>
+<div class="sec" id="t-transcripts"><div class="tc"><h3>Transcripts <button class="rbtn" onclick="loadTranscripts()">Refresh</button></h3>
+<div style="overflow-x:auto"><table><thead><tr><th>Session ID</th><th>Role</th><th>Content</th><th>Time</th></tr></thead>
+<tbody id="tb"><tr><td colspan="4" style="text-align:center;color:#aaa;padding:20px">Loading...</td></tr></tbody></table></div></div></div>
+<div class="sec" id="t-learning"><div class="tc"><h3>Learning Log <button class="rbtn" onclick="loadLearning()">Refresh</button></h3>
+<div style="overflow-x:auto"><table><thead><tr><th>Type</th><th>Session</th><th>Original</th><th>Corrected</th><th>Language</th><th>Time</th></tr></thead>
+<tbody id="lb"><tr><td colspan="6" style="text-align:center;color:#aaa;padding:20px">Loading...</td></tr></tbody></table></div></div></div>
+<div class="sec" id="t-superuser"><div class="tc"><h3>Create Superuser</h3>
+<p style="font-size:13px;color:#666;margin-bottom:16px">Create admin users for this panel</p>
+<div class="sfm">
+<div class="fl"><label>Username</label><input type="text" id="su" placeholder="admin_user"/></div>
+<div class="fl"><label>Password</label><input type="password" id="sp" placeholder="strong password"/></div>
+<div class="fl"><label>Full Name</label><input type="text" id="sn" placeholder="Full Name"/></div>
+<div class="fl"><label>Role</label><select id="sr"><option value="admin">Admin</option><option value="superadmin">Super Admin</option><option value="viewer">Viewer</option></select></div>
+</div><button class="cbtn" onclick="createUser()">+ Create User</button><div id="um"></div>
+<div style="margin-top:20px"><h3 style="margin-bottom:12px;font-size:13px;color:#2D3FBF">Existing Users</h3>
+<table><thead><tr><th>Username</th><th>Name</th><th>Role</th><th>Created</th></tr></thead>
+<tbody id="ub"><tr><td colspan="4" style="color:#aaa;padding:12px">No users yet</td></tr></tbody></table></div></div></div>
+<div class="sec" id="t-api"><div class="tc"><h3>API Endpoints</h3><div id="ae"></div></div></div>
+</div></div>
+<script>
+let PWD='';const B=location.origin;
+async function login(){const p=document.getElementById('pi').value;const r=await fetch(B+'/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:p})});const d=await r.json();if(d.success){PWD=p;document.getElementById('lp').style.display='none';document.getElementById('ap').style.display='block';loadAll();}else document.getElementById('lm').textContent='Wrong password';}
+function logout(){PWD='';document.getElementById('lp').style.display='block';document.getElementById('ap').style.display='none';}
+function sw(n,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));el.classList.add('on');document.getElementById('t-'+n).classList.add('on');}
+function loadAll(){loadSessions();loadTranscripts();loadLearning();loadUsers();buildApi();}
+async function loadSessions(){const r=await fetch(B+'/admin/sessions?pwd='+PWD);const d=await r.json();document.getElementById('s1').textContent=d.stats.total;document.getElementById('s2').textContent=d.stats.confirmed;document.getElementById('s3').textContent=d.stats.corrections;document.getElementById('s4').textContent=d.stats.accuracy+'%';document.getElementById('sb').innerHTML=d.sessions.map(s=>`<tr><td style="font-family:monospace;font-size:10px">${s.id}</td><td><span class="b bb">${s.language||'-'}</span></td><td>${s.issue_category||'-'}</td><td>${s.emotion||'-'}</td><td>${s.confidence?(s.confidence*100).toFixed(0)+'%':'-'}</td><td><span class="b bg">${s.verified_count||0}</span></td><td><span class="b br">${s.correction_count||0}</span></td><td>${s.escalated?'<span class="b br">YES</span>':'<span class="b bg">NO</span>'}</td><td style="font-size:10px;color:#888">${(s.start_time||'').slice(11,19)}</td></tr>`).join('')||'<tr><td colspan="9" style="text-align:center;color:#aaa;padding:20px">No sessions yet</td></tr>';}
+async function loadTranscripts(){const r=await fetch(B+'/admin/transcripts?pwd='+PWD);const d=await r.json();document.getElementById('tb').innerHTML=d.map(t=>`<tr><td style="font-family:monospace;font-size:10px">${t.session_id}</td><td><span class="b ${t.role==='citizen'?'ba':t.role==='ai'?'bb':'bg'}">${t.role}</span></td><td style="max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.content}">${t.content}</td><td style="font-size:10px;color:#888">${(t.timestamp||'').slice(11,19)}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:#aaa;padding:20px">No transcripts</td></tr>';}
+async function loadLearning(){const r=await fetch(B+'/admin/learning?pwd='+PWD);const d=await r.json();document.getElementById('lb').innerHTML=d.map(l=>`<tr><td><span class="b ${l.type==='confirm'?'bg':'br'}">${l.type}</span></td><td style="font-family:monospace;font-size:10px">${l.session_id}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis">${l.original||'-'}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis">${l.corrected||'-'}</td><td>${l.language||'-'}</td><td style="font-size:10px;color:#888">${(l.timestamp||'').slice(11,19)}</td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:#aaa;padding:20px">No data</td></tr>';}
+async function loadUsers(){const r=await fetch(B+'/admin/users?pwd='+PWD);const d=await r.json();document.getElementById('ub').innerHTML=d.map(u=>`<tr><td style="font-family:monospace">${u.username}</td><td>${u.full_name||'-'}</td><td><span class="b bb">${u.role}</span></td><td style="font-size:10px;color:#888">${(u.created_at||'').slice(0,10)}</td></tr>`).join('')||'<tr><td colspan="4" style="color:#aaa;padding:12px">No users</td></tr>';}
+async function createUser(){const body={username:document.getElementById('su').value,password:document.getElementById('sp').value,full_name:document.getElementById('sn').value,role:document.getElementById('sr').value,admin_pwd:PWD};if(!body.username||!body.password){document.getElementById('um').innerHTML='<div class="msg mer">Fill all fields</div>';return;}const r=await fetch(B+'/admin/create-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json();document.getElementById('um').innerHTML=d.success?'<div class="msg mok">User created!</div>':'<div class="msg mer">'+d.error+'</div>';if(d.success){loadUsers();['su','sp','sn'].forEach(id=>document.getElementById(id).value='');}}
+function buildApi(){const eps=[{m:'GET',u:'/',c:'#0D9E6B',d:'Main dashboard'},{m:'GET',u:'/health',c:'#0D9E6B',d:'Health check'},{m:'GET',u:'/stats',c:'#0D9E6B',d:'Statistics'},{m:'POST',u:'/session/create',c:'#FF6B00',d:'Create session'},{m:'POST',u:'/interpret',c:'#FF6B00',d:'Interpret speech'},{m:'POST',u:'/feedback',c:'#FF6B00',d:'Record feedback'},{m:'GET',u:'/training-data',c:'#0D9E6B',d:'Export data'},{m:'GET',u:'/admin',c:'#7C3AED',d:'Admin panel'},{m:'POST',u:'/admin/login',c:'#FF6B00',d:'Admin login'},{m:'GET',u:'/admin/sessions',c:'#0D9E6B',d:'View sessions'},{m:'GET',u:'/admin/transcripts',c:'#0D9E6B',d:'View transcripts'},{m:'GET',u:'/admin/learning',c:'#0D9E6B',d:'Learning log'},{m:'POST',u:'/admin/create-user',c:'#FF6B00',d:'Create user'},{m:'WS',u:'/ws/{id}',c:'#2D3FBF',d:'WebSocket'}];document.getElementById('ae').innerHTML=eps.map(e=>`<div class="ar"><span class="mth" style="background:${e.c}">${e.m}</span><div class="au">${B}${e.u}</div><span style="font-size:12px;color:#666;min-width:200px">${e.d}</span><button class="cpb" onclick="navigator.clipboard.writeText('${B}${e.u}');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)">Copy</button></div>`).join('');}
+</script></body></html>"""
+
+@app.post("/admin/login")
+async def admin_login(req: AdminLogin):
+    return {"success": req.password == ADMIN_PASSWORD}
+
+@app.get("/admin/sessions")
+async def admin_sessions(pwd: str = ""):
+    if pwd != ADMIN_PASSWORD: raise HTTPException(403, "Unauthorized")
+    db = get_db()
+    rows = db.execute("SELECT * FROM sessions ORDER BY start_time DESC LIMIT 200").fetchall()
+    confirmed = db.execute("SELECT COUNT(*) FROM learning_log WHERE type='confirm'").fetchone()[0]
+    corrections = db.execute("SELECT COUNT(*) FROM learning_log WHERE type='correct'").fetchone()[0]
+    stats = {"total": db.execute("SELECT COUNT(*) FROM sessions").fetchone()[0],
+             "confirmed": confirmed, "corrections": corrections,
+             "escalated": db.execute("SELECT COUNT(*) FROM sessions WHERE escalated=1").fetchone()[0],
+             "accuracy": round(confirmed/max(confirmed+corrections,1)*100,1)}
+    db.close()
+    return {"sessions": [dict(r) for r in rows], "stats": stats}
+
+@app.get("/admin/transcripts")
+async def admin_transcripts(pwd: str = ""):
+    if pwd != ADMIN_PASSWORD: raise HTTPException(403, "Unauthorized")
+    db = get_db()
+    rows = db.execute("SELECT * FROM transcripts ORDER BY timestamp DESC LIMIT 500").fetchall()
+    db.close()
+    return [dict(r) for r in rows]
+
+@app.get("/admin/learning")
+async def admin_learning(pwd: str = ""):
+    if pwd != ADMIN_PASSWORD: raise HTTPException(403, "Unauthorized")
+    db = get_db()
+    rows = db.execute("SELECT * FROM learning_log ORDER BY timestamp DESC LIMIT 500").fetchall()
+    db.close()
+    return [dict(r) for r in rows]
+
+@app.get("/admin/users")
+async def admin_users(pwd: str = ""):
+    if pwd != ADMIN_PASSWORD: raise HTTPException(403, "Unauthorized")
+    db = get_db()
+    rows = db.execute("SELECT id,username,full_name,role,created_at FROM admin_users ORDER BY created_at DESC").fetchall()
+    db.close()
+    return [dict(r) for r in rows]
+
+@app.post("/admin/create-user")
+async def create_admin_user(req: CreateUser):
+    if req.admin_pwd != ADMIN_PASSWORD:
+        return {"success": False, "error": "Wrong admin password"}
+    db = get_db()
+    try:
+        db.execute("INSERT INTO admin_users (username,password,full_name,role,created_at) VALUES (?,?,?,?,?)",
+                   (req.username,req.password,req.full_name,req.role,datetime.now().isoformat()))
+        db.commit(); db.close()
+        return {"success": True}
+    except Exception as e:
+        db.close(); return {"success": False, "error": str(e)}
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
