@@ -316,7 +316,7 @@ body::before {
 .page {
   display: grid;
   grid-template-columns: 1fr 340px;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto 1fr;
   gap: 20px;
   padding: 20px 28px 32px;
   min-height: calc(100vh - 64px);
@@ -326,7 +326,7 @@ body::before {
 
 /* ════ SCENARIO STRIP ════ */
 .scenario-strip {
-  grid-column: 1 / -1;
+  grid-column: 1;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 20px;
@@ -820,7 +820,7 @@ body::before {
 /* ════ RIGHT PANEL ════ */
 .right-col {
   display: flex; flex-direction: column; gap: 18px;
-  grid-row: 1 / 3; grid-column: 2;
+  grid-row: 1 / 4; grid-column: 2;
 }
 
 /* ════ CALL STATUS CARD ════ */
@@ -1518,7 +1518,7 @@ body::before {
 
   <!-- ── HOW IT WORKS GUIDE ── -->
   <div id="howto-banner" style="
-    grid-column: 1 / -1;
+    grid-column: 1;
     background: linear-gradient(135deg, #fff8f0 0%, #f0f2ff 100%);
     border: 1.5px solid rgba(255,107,0,0.15);
     border-radius: 20px;
@@ -1562,10 +1562,10 @@ body::before {
     " title="Dismiss">✕</button>
   </div>
 
-  <!-- ── LEFT MAIN COLUMN ── -->
-  <div class="main-col">
+  <!-- ── INSIGHT SIDEBAR (fills left space alongside scenario strip + howto) ── -->
+  <div style="grid-column:1;grid-row:1/3;display:flex;flex-direction:column;gap:16px;min-width:0">
 
-    <!-- ══ INSIGHT CARDS (left column) ══ -->
+    <!-- ══ INSIGHT CARDS ══ -->
 
     <!-- Card A: KPI Hero -->
     <div class="ins-hero">
@@ -1755,6 +1755,11 @@ body::before {
         </div>
       </div>
     </div>
+
+  </div><!-- end insight sidebar -->
+
+  <!-- ── LEFT MAIN COLUMN ── -->
+  <div class="main-col" style="grid-column:1;grid-row:3">
 
     <!-- Citizen Voice Card -->
     <div class="card">
