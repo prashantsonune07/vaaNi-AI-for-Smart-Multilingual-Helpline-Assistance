@@ -71,9 +71,9 @@ init_db()
 
 # ── AI CONFIG ─────────────────────────────────
 # ── ADMIN CONFIG ──────────────────────────────
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "vaani@admin123")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")  # Set this in Render Environment Variables
 
-OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY", "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")
+OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY", "")  # Set this in Render Environment Variables
 OPENROUTER_API = "https://openrouter.ai/api/v1/chat/completions"
 OPENROUTER_MODEL = "anthropic/claude-3.5-haiku"
 
@@ -2242,16 +2242,12 @@ function getStreamDisplay() {
   return el;
 }
 
-// ── OPENROUTER LIVE AI (hardcoded key — works automatically) ──
-const OPENROUTER_KEY = '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';
-const OPENROUTER_API = 'https://openrouter.ai/api/v1/chat/completions';
-const OPENROUTER_MODEL = 'anthropic/claude-3.5-haiku';
-
+// ── AI via secure backend proxy (API key never exposed to browser) ──
 async function callClaudeAPI(text, language) {
   try {
     return await callOpenRouter(text, language);
   } catch(e) {
-    console.warn('OpenRouter failed, using demo data:', e.message);
+    console.warn('AI call failed, using demo data:', e.message);
     return getMockResult(text, language);
   }
 }
@@ -2260,37 +2256,25 @@ async function callOpenRouter(text, language) {
   const display = getStreamDisplay();
   display.textContent = '⚡ Connecting to AI...';
 
-  const response = await fetch(OPENROUTER_API, {
+  const response = await fetch('/interpret', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + OPENROUTER_KEY,
-      'HTTP-Referer': 'https://vaani-1092.karnataka.gov.in',
-      'X-Title': 'VaaNi 1092 Helpline'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: OPENROUTER_MODEL,
-      max_tokens: 1000,
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: `Citizen said (in ${language}): "${text}"\\n\\nInterpret and respond in the exact JSON format.` }
-      ]
+      session_id: STATE.sessionId || 'frontend',
+      text: text,
+      language: language
     })
   });
 
   if (!response.ok) {
     const err = await response.text();
-    throw new Error('OpenRouter ' + response.status + ': ' + err.slice(0,100));
+    throw new Error('Backend ' + response.status + ': ' + err.slice(0,100));
   }
 
   const data = await response.json();
   display.textContent = '✓ AI responded!';
   setTimeout(() => { if(display) display.remove(); }, 800);
-
-  let txt = data.choices[0].message.content;
-  if (txt.includes('```json')) txt = txt.split('```json')[1].split('```')[0].trim();
-  else if (txt.includes('```')) txt = txt.split('```')[1].split('```')[0].trim();
-  return JSON.parse(txt);
+  return data;
 }
 
 async function callViaBackend(text, language) {
