@@ -70,6 +70,9 @@ def init_db():
 init_db()
 
 # ── AI CONFIG ─────────────────────────────────
+# ── ADMIN CONFIG ──────────────────────────────
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "vaani@admin123")
+
 OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY", "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")
 OPENROUTER_API = "https://openrouter.ai/api/v1/chat/completions"
 OPENROUTER_MODEL = "anthropic/claude-3.5-haiku"
