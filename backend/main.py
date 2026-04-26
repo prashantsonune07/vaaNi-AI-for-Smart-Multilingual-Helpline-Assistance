@@ -207,7 +207,17 @@ body {
   overflow-x: hidden;
 }
 
-/* ornamental bg removed — replaced by gov-hero banner */
+/* ── ORNAMENTAL BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; height: 320px;
+  background: linear-gradient(160deg, #FF6B00 0%, #FF9A4A 30%, #2D3FBF 70%, #1a2590 100%);
+  clip-path: ellipse(110% 100% at 50% 0%);
+  opacity: 0.07;
+  pointer-events: none;
+  z-index: 0;
+}
 
 /* ════ HEADER ════ */
 .header {
@@ -303,147 +313,20 @@ body {
 .header-stat strong { color: var(--ink); font-weight: 600; }
 
 /* ════ LAYOUT ════ */
-
-/* ── Government Hero Banner ── */
-.gov-hero {
-  background: linear-gradient(135deg, #0f0c29 0%, #1a1060 45%, #0a1f5c 100%);
-  position: relative; overflow: hidden;
-  padding: 0 28px;
-  border-bottom: 3px solid;
-  border-image: linear-gradient(90deg, #FF6B00, #FF9A4A, #2D3FBF, #FF6B00) 1;
-  z-index: 1;
-}
-.gov-hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image: radial-gradient(rgba(255,255,255,.025) 1px, transparent 1px);
-  background-size: 28px 28px; pointer-events: none;
-}
-.gov-hero::after {
-  content: '';
-  position: absolute; top: -80px; right: -80px;
-  width: 400px; height: 400px;
-  background: radial-gradient(ellipse, rgba(255,107,0,.12), transparent 65%);
-  pointer-events: none;
-}
-.gov-hero-inner {
-  position: relative; z-index: 1;
-  display: flex; align-items: center; gap: 40px;
-  padding: 28px 0 20px; flex-wrap: wrap;
-  max-width: 1440px; margin: 0 auto;
-}
-.gov-hero-left { flex: 1; min-width: 280px; }
-.gov-hero-badge {
-  display: inline-flex; align-items: center; gap: 7px;
-  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
-  border-radius: 20px; padding: 4px 12px;
-  font-size: 10px; font-weight: 600; color: rgba(255,255,255,.55);
-  letter-spacing: .5px; text-transform: uppercase; margin-bottom: 12px;
-}
-.gov-badge-dot {
-  width: 6px; height: 6px; border-radius: 50%; background: #0D9E6B;
-  flex-shrink: 0; animation: insPulse 2s infinite;
-}
-.gov-hero-title {
-  font-size: 52px; font-weight: 800; color: #fff;
-  letter-spacing: -2px; line-height: 1; margin-bottom: 10px;
-}
-.gov-title-accent {
-  background: linear-gradient(135deg, #FF6B00, #FF9A4A);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.gov-hero-sub {
-  font-size: 14px; color: rgba(255,255,255,.55); line-height: 1.6; margin-bottom: 16px;
-}
-.gov-hero-pills { display: flex; gap: 8px; flex-wrap: wrap; }
-.gov-pill {
-  display: flex; align-items: center; gap: 5px;
-  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.1);
-  border-radius: 20px; padding: 5px 12px;
-  font-size: 11px; color: rgba(255,255,255,.7); font-weight: 500;
-  transition: background .2s;
-}
-.gov-pill:hover { background: rgba(255,255,255,.13); }
-
-.gov-hero-right { flex-shrink: 0; }
-.gov-hero-stat-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;
-}
-.gov-hero-stat {
-  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
-  border-radius: 14px; padding: 14px 16px; text-align: center; min-width: 110px;
-}
-.gov-hero-stat-val { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
-.gov-hero-stat-lbl {
-  font-size: 10px; color: rgba(255,255,255,.38); text-transform: uppercase;
-  letter-spacing: .5px; margin-top: 4px;
-}
-.gov-hero-lang-pill {
-  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
-  border-radius: 12px; padding: 10px 16px;
-  display: flex; align-items: center; gap: 10px; justify-content: center;
-  font-size: 15px;
-}
-.gov-hlp-sep { color: rgba(255,255,255,.2); font-size: 12px; }
-
-/* Workflow steps */
-.gov-flow {
-  position: relative; z-index: 1;
-  display: flex; align-items: center; gap: 0;
-  padding: 16px 0 22px; flex-wrap: wrap; gap: 6px;
-  max-width: 1440px; margin: 0 auto;
-  border-top: 1px solid rgba(255,255,255,.07);
-}
-.gov-flow-step {
-  display: flex; align-items: center; gap: 10px;
-  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
-  border-radius: 12px; padding: 10px 14px; flex: 1; min-width: 150px;
-  transition: background .2s;
-}
-.gov-flow-step:hover { background: rgba(255,255,255,.09); }
-.gov-flow-num {
-  width: 28px; height: 28px; border-radius: 50%;
-  color: white; font-size: 12px; font-weight: 800;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.gov-flow-text { display: flex; flex-direction: column; gap: 2px; }
-.gov-flow-text strong { font-size: 12px; color: #fff; font-weight: 700; }
-.gov-flow-text span { font-size: 10px; color: rgba(255,255,255,.4); }
-.gov-flow-arrow { color: rgba(255,255,255,.2); font-size: 18px; padding: 0 2px; flex-shrink: 0; }
-
-/* Demo Strip */
-.demo-strip-row {
-  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-  padding: 14px 28px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
-  position: relative; z-index: 1;
-}
-.demo-strip-label {
-  display: flex; align-items: center; gap: 7px;
-  font-size: 11px; font-weight: 700; color: var(--ink3);
-  text-transform: uppercase; letter-spacing: 1px;
-  white-space: nowrap;
-}
-.demo-strip-dot {
-  width: 7px; height: 7px; border-radius: 50%; background: #FF6B00;
-  animation: insPulse 2s infinite; flex-shrink: 0;
-}
-
-/* Main 2-col grid */
 .page {
   display: grid;
   grid-template-columns: 1fr 340px;
+  grid-template-rows: auto 1fr;
   gap: 20px;
   padding: 20px 28px 32px;
+  min-height: calc(100vh - 64px);
   position: relative; z-index: 1;
   max-width: 1440px; margin: 0 auto;
 }
 
-/* ════ SCENARIO STRIP (kept for any fallback references) ════ */
+/* ════ SCENARIO STRIP ════ */
 .scenario-strip {
-  grid-column: 1;
+  grid-column: 1 / -1;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 20px;
@@ -937,7 +820,7 @@ body {
 /* ════ RIGHT PANEL ════ */
 .right-col {
   display: flex; flex-direction: column; gap: 18px;
-  grid-column: 2;
+  grid-row: 1 / 3; grid-column: 2;
 }
 
 /* ════ CALL STATUS CARD ════ */
@@ -1594,146 +1477,284 @@ body {
 </header>
 
 <!-- ══ MAIN PAGE ══ -->
-
-<!-- ── GOVERNMENT HERO BANNER ── -->
-<div class="gov-hero">
-  <div class="gov-hero-inner">
-    <div class="gov-hero-left">
-      <div class="gov-hero-badge">
-        <span class="gov-badge-dot"></span>
-        Government of Karnataka · Department of Personnel &amp; Administrative Reforms
-      </div>
-      <h1 class="gov-hero-title">VaaNi <span class="gov-title-accent">AI</span></h1>
-      <p class="gov-hero-sub">Accurate Understanding Before Response —<br>Voice-to-Voice AI for the 1092 Citizen Helpline</p>
-      <div class="gov-hero-pills">
-        <div class="gov-pill"><span>🗣️</span> Multilingual</div>
-        <div class="gov-pill"><span>🧠</span> Dialect-Aware</div>
-        <div class="gov-pill"><span>💛</span> Emotion-Sensitive</div>
-        <div class="gov-pill"><span>🛡️</span> Human Takeover</div>
-      </div>
-    </div>
-    <div class="gov-hero-right">
-      <div class="gov-hero-stat-grid">
-        <div class="gov-hero-stat">
-          <div class="gov-hero-stat-val" style="color:#FF9A4A" id="ins-total">0</div>
-          <div class="gov-hero-stat-lbl">Calls Today</div>
-        </div>
-        <div class="gov-hero-stat">
-          <div class="gov-hero-stat-val" style="color:#12C882" id="ins-accuracy">—</div>
-          <div class="gov-hero-stat-lbl">AI Accuracy</div>
-        </div>
-        <div class="gov-hero-stat">
-          <div class="gov-hero-stat-val" style="color:#7B8FF7" id="ins-confirmed">0</div>
-          <div class="gov-hero-stat-lbl">Verified</div>
-        </div>
-        <div class="gov-hero-stat">
-          <div class="gov-hero-stat-val" style="color:#FF5252" id="ins-escalated">0</div>
-          <div class="gov-hero-stat-lbl">Escalated</div>
-        </div>
-      </div>
-      <div class="gov-hero-lang-row">
-        <div class="gov-hero-lang-pill">
-          <span style="color:#FF6B00;font-weight:700">ಕನ್ನಡ</span>
-          <span class="gov-hlp-sep">·</span>
-          <span style="color:#2D3FBF;font-weight:700">हिंदी</span>
-          <span class="gov-hlp-sep">·</span>
-          <span style="color:#0D9E6B;font-weight:700">English</span>
-          <span class="gov-hlp-sep">·</span>
-          <span style="color:#D97700;font-weight:700">తెలుగు</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Workflow Steps -->
-  <div class="gov-flow">
-    <div class="gov-flow-step">
-      <div class="gov-flow-num" style="background:#FF6B00">1</div>
-      <div class="gov-flow-text">
-        <strong>Citizen Speaks</strong>
-        <span>In their own language or dialect</span>
-      </div>
-    </div>
-    <div class="gov-flow-arrow">→</div>
-    <div class="gov-flow-step">
-      <div class="gov-flow-num" style="background:#2D3FBF">2</div>
-      <div class="gov-flow-text">
-        <strong>AI Interprets</strong>
-        <span>Dialect + emotion aware</span>
-      </div>
-    </div>
-    <div class="gov-flow-arrow">→</div>
-    <div class="gov-flow-step">
-      <div class="gov-flow-num" style="background:#D97700">3</div>
-      <div class="gov-flow-text">
-        <strong>AI Verifies</strong>
-        <span>"Did I understand correctly?"</span>
-      </div>
-    </div>
-    <div class="gov-flow-arrow">→</div>
-    <div class="gov-flow-step">
-      <div class="gov-flow-num" style="background:#0D9E6B">4</div>
-      <div class="gov-flow-text">
-        <strong>Agent Responds</strong>
-        <span>With full context</span>
-      </div>
-    </div>
-    <div class="gov-flow-arrow">→</div>
-    <div class="gov-flow-step">
-      <div class="gov-flow-num" style="background:#E02020">5</div>
-      <div class="gov-flow-text">
-        <strong>Human Takeover</strong>
-        <span>If AI is unsure or distress detected</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ── SCENARIO + DEMO STRIP ── -->
-<div class="demo-strip-row">
-  <div class="demo-strip-label">
-    <span class="demo-strip-dot"></span>
-    Try a Live Demo Scenario
-  </div>
-  <div class="scenario-cards">
-    <button class="sc-btn" onclick="runScenario(0)">
-      <span class="sc-icon">🌾</span>
-      Ration Card
-      <span class="lang-tag">ಕನ್ನಡ</span>
-    </button>
-    <button class="sc-btn" onclick="runScenario(1)">
-      <span class="sc-icon">👵</span>
-      Pension Issue
-      <span class="lang-tag">ಕನ್ನಡ</span>
-    </button>
-    <button class="sc-btn" onclick="runScenario(2)">
-      <span class="sc-icon">💧</span>
-      Water Supply
-      <span class="lang-tag">हिंदी</span>
-    </button>
-    <button class="sc-btn" onclick="runScenario(3)">
-      <span class="sc-icon">🚨</span>
-      Emergency
-      <span class="lang-tag">URGENT</span>
-    </button>
-    <button class="sc-btn" onclick="runScenario(4)">
-      <span class="sc-icon">📋</span>
-      Land Records
-      <span class="lang-tag">English</span>
-    </button>
-  </div>
-  <div class="lang-toggle">
-    <button class="lang-btn on" onclick="setVerifLang('kannada',this)">ಕನ್ನಡ</button>
-    <button class="lang-btn" onclick="setVerifLang('hindi',this)">हिंदी</button>
-    <button class="lang-btn" onclick="setVerifLang('english',this)">Eng</button>
-  </div>
-</div>
-
-<!-- ── MAIN 2-COL GRID ── -->
 <div class="page">
 
-  <!-- ── LEFT COLUMN ── -->
+  <!-- ── SCENARIO STRIP ── -->
+  <div class="scenario-strip">
+    <div class="strip-label">Live Demo</div>
+    <div class="scenario-cards">
+      <button class="sc-btn" onclick="runScenario(0)">
+        <span class="sc-icon">🌾</span>
+        Ration Card
+        <span class="lang-tag">ಕನ್ನಡ</span>
+      </button>
+      <button class="sc-btn" onclick="runScenario(1)">
+        <span class="sc-icon">👵</span>
+        Pension Issue
+        <span class="lang-tag">ಕನ್ನಡ</span>
+      </button>
+      <button class="sc-btn" onclick="runScenario(2)">
+        <span class="sc-icon">💧</span>
+        Water Supply
+        <span class="lang-tag">हिंदी</span>
+      </button>
+      <button class="sc-btn" onclick="runScenario(3)">
+        <span class="sc-icon">🚨</span>
+        Emergency
+        <span class="lang-tag">URGENT</span>
+      </button>
+      <button class="sc-btn" onclick="runScenario(4)">
+        <span class="sc-icon">📋</span>
+        Land Records
+        <span class="lang-tag">English</span>
+      </button>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn on" onclick="setVerifLang('kannada',this)">ಕನ್ನಡ</button>
+      <button class="lang-btn" onclick="setVerifLang('hindi',this)">हिंदी</button>
+      <button class="lang-btn" onclick="setVerifLang('english',this)">Eng</button>
+    </div>
+  </div>
+
+  <!-- ── HOW IT WORKS GUIDE ── -->
+  <div id="howto-banner" style="
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #fff8f0 0%, #f0f2ff 100%);
+    border: 1.5px solid rgba(255,107,0,0.15);
+    border-radius: 20px;
+    padding: 18px 24px;
+    display: flex; align-items: center; gap: 0;
+  ">
+    <div style="flex:1;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:700;color:var(--ink2);white-space:nowrap">How it works:</div>
+      <!-- Steps -->
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:7px">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--saffron);color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+          <span style="font-size:12px;color:var(--ink2)">Citizen calls &amp; speaks<br><span style="color:var(--ink3);font-size:11px">in their own language</span></span>
+        </div>
+        <div style="color:var(--ink4);font-size:16px;padding:0 4px">→</div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--indigo);color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+          <span style="font-size:12px;color:var(--ink2)">AI interprets<br><span style="color:var(--ink3);font-size:11px">dialect + emotion aware</span></span>
+        </div>
+        <div style="color:var(--ink4);font-size:16px;padding:0 4px">→</div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--amber);color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+          <span style="font-size:12px;color:var(--ink2)">AI verifies<br><span style="color:var(--ink3);font-size:11px">"Did I understand you?"</span></span>
+        </div>
+        <div style="color:var(--ink4);font-size:16px;padding:0 4px">→</div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--jade);color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
+          <span style="font-size:12px;color:var(--ink2)">Agent responds<br><span style="color:var(--ink3);font-size:11px">with full context</span></span>
+        </div>
+        <div style="color:var(--ink4);font-size:16px;padding:0 4px">→</div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--crimson);color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">5</div>
+          <span style="font-size:12px;color:var(--ink2)">Human takeover<br><span style="color:var(--ink3);font-size:11px">if AI is unsure</span></span>
+        </div>
+      </div>
+    </div>
+    <button onclick="document.getElementById('howto-banner').style.display='none'" style="
+      background:none;border:none;color:var(--ink4);
+      font-size:18px;cursor:pointer;padding:4px 8px;
+      border-radius:6px; flex-shrink:0; margin-left:12px;
+    " title="Dismiss">✕</button>
+  </div>
+
+  <!-- ── LEFT MAIN COLUMN ── -->
   <div class="main-col">
+
+    <!-- ══ INSIGHT CARDS (left column) ══ -->
+
+    <!-- Card A: KPI Hero -->
+    <div class="ins-hero">
+      <div class="ins-dots-bg"></div>
+      <div class="ins-card-hdr ins-z">
+        <div class="ins-live-dot"></div>
+        <div class="ins-card-title">Live Dashboard</div>
+        <div class="ins-clock" id="insights-time">—</div>
+      </div>
+
+      <div class="ins-kpi-grid ins-z">
+        <div class="ins-kpi-box">
+          <div class="ins-kpi-top">
+            <span class="ins-kpi-icon">📞</span>
+            <span class="ins-kpi-badge kbg-orange" id="kpi-calls-badge">Today</span>
+          </div>
+          <div class="ins-kpi-val" style="color:#FF9A4A" id="ins-total">0</div>
+          <div class="ins-kpi-lbl">Total Calls</div>
+        </div>
+        <div class="ins-kpi-box">
+          <div class="ins-kpi-top">
+            <span class="ins-kpi-icon">🎯</span>
+            <span class="ins-kpi-badge kbg-green">AI Score</span>
+          </div>
+          <div class="ins-kpi-val" style="color:#12C882" id="ins-accuracy">—</div>
+          <div class="ins-kpi-lbl">Accuracy Rate</div>
+        </div>
+        <div class="ins-kpi-box">
+          <div class="ins-kpi-top">
+            <span class="ins-kpi-icon">✅</span>
+            <span class="ins-kpi-badge kbg-blue">Verified</span>
+          </div>
+          <div class="ins-kpi-val" style="color:#7B8FF7" id="ins-confirmed">0</div>
+          <div class="ins-kpi-lbl">Confirmed</div>
+        </div>
+        <div class="ins-kpi-box">
+          <div class="ins-kpi-top">
+            <span class="ins-kpi-icon">🚨</span>
+            <span class="ins-kpi-badge kbg-red">Watch</span>
+          </div>
+          <div class="ins-kpi-val" style="color:#FF5252" id="ins-escalated">0</div>
+          <div class="ins-kpi-lbl">Escalated</div>
+        </div>
+      </div>
+
+      <!-- Sparkline: call volume last 8h -->
+      <div class="ins-spark-wrap ins-z">
+        <div class="ins-spark-label">📈 Call Volume · Last 8 Hours</div>
+        <div class="ins-sparkline">
+          <div class="spk" style="height:30%"></div>
+          <div class="spk" style="height:52%"></div>
+          <div class="spk" style="height:44%"></div>
+          <div class="spk" style="height:78%"></div>
+          <div class="spk" style="height:60%"></div>
+          <div class="spk" style="height:88%"></div>
+          <div class="spk" style="height:70%"></div>
+          <div class="spk now" style="height:100%"></div>
+        </div>
+        <div class="ins-spark-times">
+          <span id="spark-t0">—</span>
+          <span id="spark-tnow">Now</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card B: Issue Category Breakdown -->
+    <div class="ins-bars-card">
+      <div class="ins-bars-hdr">
+        <div class="ins-bars-dot" style="background:#FF6B00"></div>
+        <div class="ins-bars-title">Issue Category Breakdown</div>
+      </div>
+      <div class="ibar-row">
+        <div class="ibar-icon">🏷️</div>
+        <div class="ibar-label">Ration Card</div>
+        <div class="ibar-track"><div class="ibar-fill" id="ab-ration" style="width:72%;background:linear-gradient(90deg,#FF6B00,#FF9A4A)"></div></div>
+        <div class="ibar-pct" id="abv-ration">72%</div>
+      </div>
+      <div class="ibar-row">
+        <div class="ibar-icon">👴</div>
+        <div class="ibar-label">Pension</div>
+        <div class="ibar-track"><div class="ibar-fill" id="ab-pension" style="width:55%;background:linear-gradient(90deg,#2D3FBF,#4A5DD9)"></div></div>
+        <div class="ibar-pct" id="abv-pension">55%</div>
+      </div>
+      <div class="ibar-row">
+        <div class="ibar-icon">💧</div>
+        <div class="ibar-label">Water Supply</div>
+        <div class="ibar-track"><div class="ibar-fill" id="ab-water" style="width:38%;background:linear-gradient(90deg,#0D9E6B,#12C882)"></div></div>
+        <div class="ibar-pct" id="abv-water">38%</div>
+      </div>
+      <div class="ibar-row">
+        <div class="ibar-icon">🚑</div>
+        <div class="ibar-label">Emergency</div>
+        <div class="ibar-track"><div class="ibar-fill" id="ab-emergency" style="width:18%;background:linear-gradient(90deg,#E02020,#FF5252)"></div></div>
+        <div class="ibar-pct" id="abv-emergency">18%</div>
+      </div>
+      <div class="ibar-row">
+        <div class="ibar-icon">📜</div>
+        <div class="ibar-label">Land Records</div>
+        <div class="ibar-track"><div class="ibar-fill" id="ab-land" style="width:29%;background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div></div>
+        <div class="ibar-pct" id="abv-land">29%</div>
+      </div>
+      <div class="ibar-row">
+        <div class="ibar-icon">🪪</div>
+        <div class="ibar-label">Aadhaar</div>
+        <div class="ibar-track"><div class="ibar-fill" id="ab-aadhar" style="width:22%;background:linear-gradient(90deg,#D97700,#FFAD33)"></div></div>
+        <div class="ibar-pct" id="abv-aadhar">22%</div>
+      </div>
+    </div>
+
+    <!-- Card C: Language Split + Sentiment -->
+    <div class="ins-two-col">
+
+      <div class="ins-mini-card">
+        <div class="ins-mini-title">🌐 Language Split</div>
+        <div class="ins-lang-item">
+          <div class="ins-lang-dot" style="background:#FF6B00"></div>
+          <div class="ins-lang-name">ಕನ್ನಡ</div>
+          <div class="ins-lang-bar"><div class="ins-lang-fill" style="width:61%;background:#FF6B00"></div></div>
+          <div class="ins-lang-pct">61%</div>
+        </div>
+        <div class="ins-lang-item">
+          <div class="ins-lang-dot" style="background:#2D3FBF"></div>
+          <div class="ins-lang-name">हिंदी</div>
+          <div class="ins-lang-bar"><div class="ins-lang-fill" style="width:24%;background:#2D3FBF"></div></div>
+          <div class="ins-lang-pct">24%</div>
+        </div>
+        <div class="ins-lang-item">
+          <div class="ins-lang-dot" style="background:#0D9E6B"></div>
+          <div class="ins-lang-name">English</div>
+          <div class="ins-lang-bar"><div class="ins-lang-fill" style="width:15%;background:#0D9E6B"></div></div>
+          <div class="ins-lang-pct">15%</div>
+        </div>
+        <div class="ins-lang-item">
+          <div class="ins-lang-dot" style="background:#D97700"></div>
+          <div class="ins-lang-name">తెలుగు</div>
+          <div class="ins-lang-bar"><div class="ins-lang-fill" style="width:8%;background:#D97700"></div></div>
+          <div class="ins-lang-pct">8%</div>
+        </div>
+      </div>
+
+      <div class="ins-mini-card">
+        <div class="ins-mini-title">😶 Avg Sentiment</div>
+        <div class="ins-emo-grid">
+          <div class="ins-emo-box">
+            <div class="ins-emo-emoji">😰</div>
+            <div class="ins-emo-val" style="color:#FF5252" id="emo-distress">0</div>
+            <div class="ins-emo-lbl">Distress</div>
+          </div>
+          <div class="ins-emo-box">
+            <div class="ins-emo-emoji">😐</div>
+            <div class="ins-emo-val" style="color:#FFAD33" id="emo-neutral">0</div>
+            <div class="ins-emo-lbl">Neutral</div>
+          </div>
+          <div class="ins-emo-box">
+            <div class="ins-emo-emoji">😌</div>
+            <div class="ins-emo-val" style="color:#12C882" id="emo-calm">0</div>
+            <div class="ins-emo-lbl">Calm</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">
+          <div style="font-size:10px;color:var(--ink3);margin-bottom:4px;font-weight:600;letter-spacing:.5px;text-transform:uppercase">Dialect Mix</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            <span style="font-size:10px;background:var(--ink5);border-radius:20px;padding:2px 8px;color:var(--ink2)">Rural 42%</span>
+            <span style="font-size:10px;background:var(--ink5);border-radius:20px;padding:2px 8px;color:var(--ink2)">Urban 33%</span>
+            <span style="font-size:10px;background:var(--ink5);border-radius:20px;padding:2px 8px;color:var(--ink2)">Coastal 15%</span>
+            <span style="font-size:10px;background:var(--ink5);border-radius:20px;padding:2px 8px;color:var(--ink2)">Mysore 10%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card D: Agent Info + AI Tip -->
+    <div class="ins-agent-card">
+      <div class="ins-agent-row">
+        <div class="ins-agent-ava">👤</div>
+        <div>
+          <div class="ins-agent-name" id="ins-agent-name">Agent</div>
+          <div class="ins-agent-sub" id="ins-agent-status">Karnataka 1092 Helpline · On duty</div>
+        </div>
+        <div class="ins-agent-badge">● ONLINE</div>
+      </div>
+      <div class="ins-tip-box">
+        <div class="ins-tip-ico">💡</div>
+        <div class="ins-tip-txt" id="ins-tip-text">
+          <strong>Today's Tip:</strong> Ration card issues are highest today. Ask citizens to keep
+          <strong>Aadhaar + ration card number</strong> ready for faster resolution.
+        </div>
+      </div>
+    </div>
 
     <!-- Citizen Voice Card -->
     <div class="card">
@@ -1816,12 +1837,15 @@ body {
         <span id="interp-meta-lang" style="margin-left:auto;font-size:10px;color:var(--ink3);text-transform:none;letter-spacing:0;font-weight:400"></span>
       </div>
 
+      <!-- Empty state -->
       <div class="interp-empty" id="interp-empty">
         <div class="interp-empty-icon">🧠</div>
         <div class="interp-empty-text">AI interpretation will appear here after the citizen speaks.<br>The system verifies understanding before the agent responds.</div>
       </div>
 
+      <!-- Populated state (hidden initially) -->
       <div id="interp-content" style="display:none">
+        <!-- Confidence bar -->
         <div class="conf-row">
           <div class="conf-label">Confidence</div>
           <div class="conf-track">
@@ -1829,17 +1853,25 @@ body {
           </div>
           <div class="conf-pct" id="conf-pct">—</div>
         </div>
+
+        <!-- Meta pills -->
         <div class="meta-row" id="meta-row">
           <span class="mpill mpill-lang" id="mpill-lang">—</span>
           <span class="mpill mpill-dialect" id="mpill-dialect">—</span>
           <span class="mpill mpill-category" id="mpill-category">—</span>
         </div>
+
+        <!-- Summary -->
         <div class="summary-box">
           <div class="summary-lang-tag">🇮🇳 <span id="summary-lang-label">Kannada</span> Summary</div>
           <div class="summary-text-kn" id="summary-native"></div>
           <div class="summary-text-en" id="summary-english"></div>
         </div>
+
+        <!-- Keywords -->
         <div class="keywords-row" id="keywords-row"></div>
+
+        <!-- Verification block -->
         <div class="verif-block" id="verif-block">
           <div class="verif-header">
             <div class="verif-icon">❓</div>
@@ -1864,6 +1896,7 @@ body {
           <div class="card-title-dot" style="background:var(--crimson)"></div>
           Emotional Intelligence
         </div>
+
         <div class="emotion-hero" id="emotion-hero">
           <div class="emotion-face" id="emotion-face">😐</div>
           <div class="emotion-info">
@@ -1875,6 +1908,7 @@ body {
             <div class="emotion-pct-label">Intensity</div>
           </div>
         </div>
+
         <div class="sent-bars">
           <div class="sent-row">
             <div class="sent-name">Distress</div>
@@ -1897,9 +1931,11 @@ body {
             <div class="sent-val" id="sv-conf" style="color:var(--indigo)">0%</div>
           </div>
         </div>
+
         <div class="distress-badge" id="distress-badge" style="display:none">
           🚨 <span>DISTRESS DETECTED — Consider escalating to human agent immediately</span>
         </div>
+
         <div style="margin-top:12px;padding:10px 12px;background:var(--bg2);border-radius:10px;font-size:12px;color:var(--ink3);line-height:1.5" id="agent-note-box">
           Agent guidance will appear here...
         </div>
@@ -1914,6 +1950,7 @@ body {
         <div class="transcript-list" id="transcript-list">
           <div style="color:var(--ink4);font-size:12px;padding:8px 0">Conversation will appear here...</div>
         </div>
+
         <div class="card-title" style="margin-top:16px">
           <div class="card-title-dot" style="background:var(--purple)"></div>
           Learning Log
@@ -1947,7 +1984,83 @@ body {
   </div><!-- end main-col -->
 
   <!-- ── RIGHT COLUMN ── -->
-  <div class="right-col">  </div><!-- end right-col -->
+  <div class="right-col">
+
+    <!-- Call Status -->
+    <div class="card call-status-card">
+      <div class="card-title">
+        <div class="card-title-dot" style="background:var(--jade)"></div>
+        Call Status
+      </div>
+
+      <div class="status-hero">
+        <div class="status-emoji" id="status-emoji">📞</div>
+        <div class="status-text" id="status-text">Ready to receive</div>
+        <div class="status-sub" id="status-sub">Select a scenario to begin</div>
+      </div>
+
+      <div class="timer-display" id="timer-display">00:00</div>
+
+      <div class="call-meta-grid">
+        <div class="cmeta">
+          <div class="cmeta-key">Language</div>
+          <div class="cmeta-val" id="cm-lang">—</div>
+        </div>
+        <div class="cmeta">
+          <div class="cmeta-key">Dialect</div>
+          <div class="cmeta-val" id="cm-dialect">—</div>
+        </div>
+        <div class="cmeta">
+          <div class="cmeta-key">Category</div>
+          <div class="cmeta-val" id="cm-category">—</div>
+        </div>
+        <div class="cmeta">
+          <div class="cmeta-key">Verified</div>
+          <div class="cmeta-val" id="cm-verified" style="color:var(--jade)">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent Brief -->
+    <div class="card brief-card">
+      <div class="card-title" style="justify-content:space-between">
+        <span style="display:flex;align-items:center;gap:8px">
+          <div class="card-title-dot" style="background:var(--indigo)"></div>
+          Agent Brief
+        </span>
+        <span style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--indigo-xl);color:var(--indigo);text-transform:uppercase;letter-spacing:0.8px">AI Generated</span>
+      </div>
+
+      <div class="brief-content" id="brief-content">
+        After the AI interprets the citizen's issue, an actionable brief will appear here for the agent...
+      </div>
+
+      <textarea class="brief-edit-area" id="brief-edit" placeholder="Add your own notes or corrections here..."></textarea>
+      <button class="btn-save" onclick="saveBrief()">Save Note</button>
+      <div style="clear:both;height:10px"></div>
+
+      <!-- Keywords -->
+      <div class="card-title" style="margin-top:8px">
+        <div class="card-title-dot" style="background:var(--saffron)"></div>
+        Issue Keywords
+      </div>
+      <div id="brief-keywords" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px">
+        <span style="color:var(--ink4);font-size:11px">Keywords appear after interpretation...</span>
+      </div>
+    </div>
+
+    <!-- Transcript in right panel too -->
+    <div class="card" style="padding:18px">
+      <div class="card-title">
+        <div class="card-title-dot" style="background:var(--amber)"></div>
+        Session Notes
+      </div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.7" id="session-notes">
+        This panel shows real-time guidance for the agent. Corrections and confirmations from citizens are captured automatically for AI learning.
+      </div>
+    </div>
+
+  </div><!-- end right-col -->
 
 </div><!-- end page -->
 
