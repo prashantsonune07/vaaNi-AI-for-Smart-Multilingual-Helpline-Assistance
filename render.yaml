@@ -7,6 +7,10 @@ services:
     envVars:
       - key: OPENROUTER_API_KEY
         value: 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
+      - key: ADMIN_PASSWORD
+        value: vaani@admin123
+      - key: PYTHON_VERSION
+        value: "3.11.9"
     disk:
       name: vaani-db
       mountPath: /var/data

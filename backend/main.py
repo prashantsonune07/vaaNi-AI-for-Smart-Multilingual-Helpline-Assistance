@@ -9,7 +9,6 @@ import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
 import httpx
 
 app = FastAPI(title="VaaNi 1092 AI Helpline", version="2.0.0")
@@ -127,17 +126,7 @@ async def interpret(text: str, language: str) -> dict:
         return result
 
 # ── MODELS ────────────────────────────────────
-class InterpretRequest(BaseModel):
-    text: str
-    language: str = "kannada"
-    session_id: str
-
-class FeedbackRequest(BaseModel):
-    session_id: str
-    type: str
-    original: str = ""
-    corrected: str = ""
-    language: str = "kannada"
+# Models removed — using Request parsing directly
 
 # ── ROUTES ────────────────────────────────────
 # Frontend HTML embedded directly (no separate file needed)
@@ -2755,15 +2744,7 @@ setInterval(syncInsights, 15000);
 """
 
 
-class AdminLogin(BaseModel):
-    password: str
 
-class CreateUser(BaseModel):
-    username: str
-    password: str
-    full_name: str = ""
-    role: str = "admin"
-    admin_pwd: str
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_frontend():
@@ -2782,7 +2763,9 @@ async def create_session(language: str = "kannada"):
     return {"session_id": sid, "status": "active"}
 
 @app.post("/interpret")
-async def interpret_endpoint(req: InterpretRequest):
+async def interpret_endpoint(request: Request):
+    body = await request.json()
+    class req: text=body.get("text",""); language=body.get("language","kannada"); session_id=body.get("session_id","")
     if req.session_id not in sessions:
         sessions[req.session_id] = {"session_id": req.session_id, "language": req.language,
             "transcript": [], "escalated": False, "verified_count": 0, "correction_count": 0,
@@ -2802,7 +2785,9 @@ async def interpret_endpoint(req: InterpretRequest):
     return result
 
 @app.post("/feedback")
-async def record_feedback(req: FeedbackRequest):
+async def record_feedback(request: Request):
+    body = await request.json()
+    class req: session_id=body.get("session_id",""); type=body.get("type",""); original=body.get("original",""); corrected=body.get("corrected",""); language=body.get("language","kannada")
     session = sessions.get(req.session_id, {})
     db = get_db()
     if req.type == "confirm":
@@ -2950,7 +2935,9 @@ function buildApi(){const eps=[{m:'GET',u:'/',c:'#0D9E6B',d:'Main dashboard'},{m
 </script></body></html>"""
 
 @app.post("/admin/login")
-async def admin_login(req: AdminLogin):
+async def admin_login(request: Request):
+    body = await request.json()
+    class req: password=body.get("password","")
     return {"success": req.password == ADMIN_PASSWORD}
 
 @app.get("/admin/sessions")
@@ -2992,7 +2979,9 @@ async def admin_users(pwd: str = ""):
     return [dict(r) for r in rows]
 
 @app.post("/admin/create-user")
-async def create_admin_user(req: CreateUser):
+async def create_admin_user(request: Request):
+    body = await request.json()
+    class req: username=body.get("username",""); password=body.get("password",""); full_name=body.get("full_name",""); role=body.get("role","admin"); admin_pwd=body.get("admin_pwd","")
     if req.admin_pwd != ADMIN_PASSWORD:
         return {"success": False, "error": "Wrong admin password"}
     db = get_db()
