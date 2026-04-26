@@ -6,7 +6,7 @@ FastAPI backend — Works locally + Render deployment
 import asyncio, json, os, random, sqlite3
 from datetime import datetime
 import uvicorn
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 import httpx
