@@ -6,9 +6,9 @@ services:
     startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: OPENROUTER_API_KEY
-        value: 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
+        sync: false
       - key: ADMIN_PASSWORD
-        value: vaani@admin123
+        sync: false
       - key: DB_PATH
         value: /var/data/vaani.db
     disk:

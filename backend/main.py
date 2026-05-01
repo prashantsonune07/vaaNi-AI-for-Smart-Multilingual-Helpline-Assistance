@@ -207,17 +207,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ── ORNAMENTAL BACKGROUND ── */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0; left: 0; right: 0; height: 320px;
-  background: linear-gradient(160deg, #FF6B00 0%, #FF9A4A 30%, #2D3FBF 70%, #1a2590 100%);
-  clip-path: ellipse(110% 100% at 50% 0%);
-  opacity: 0.07;
-  pointer-events: none;
-  z-index: 0;
-}
+
 
 /* ════ HEADER ════ */
 .header {
@@ -316,10 +306,8 @@ body::before {
 .page {
   display: grid;
   grid-template-columns: 1fr 340px;
-  grid-template-rows: auto 1fr;
   gap: 20px;
   padding: 20px 28px 32px;
-  min-height: calc(100vh - 64px);
   position: relative; z-index: 1;
   max-width: 1440px; margin: 0 auto;
 }
@@ -820,7 +808,7 @@ body::before {
 /* ════ RIGHT PANEL ════ */
 .right-col {
   display: flex; flex-direction: column; gap: 18px;
-  grid-row: 1 / 3; grid-column: 2;
+  grid-column: 2; align-self: start;
 }
 
 /* ════ CALL STATUS CARD ════ */
@@ -1028,340 +1016,131 @@ body::before {
 }
 @keyframes shimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
 
-/* ════ LOGIN PAGE ════ */
-#login-overlay {
-  position: fixed; inset: 0; z-index: 9999;
-  display: none; align-items: center; justify-content: center;
-  background: rgba(15,12,41,0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  overflow: hidden;
+/* ════ GOV HERO BANNER ════ */
+.gov-hero {
+  background: linear-gradient(145deg,#0b0a24 0%,#111a55 50%,#0a1840 100%);
+  position:relative; overflow:hidden; padding:0 28px;
+  border-bottom:3px solid transparent;
+  border-image:linear-gradient(90deg,#FF6B00 0%,#FF9A4A 30%,#2D3FBF 70%,#FF6B00 100%) 1;
+  z-index:1;
 }
-#login-overlay.open { display: flex; }
-#login-overlay::before {
-  content: '';
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse 60% 50% at 20% 20%, rgba(255,107,0,0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 60% at 80% 80%, rgba(45,63,191,0.25) 0%, transparent 60%);
-  pointer-events: none;
+.gov-hero-dots {
+  position:absolute;inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:26px 26px;pointer-events:none;z-index:0;
 }
-#login-overlay::after {
-  content: '';
-  position: absolute; inset: 0;
-  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
-  pointer-events: none;
+.gov-hero-glow-r {
+  position:absolute;top:-80px;right:-80px;width:420px;height:420px;
+  background:radial-gradient(ellipse,rgba(255,107,0,.13),transparent 65%);
+  pointer-events:none;z-index:0;
 }
-.login-box {
-  position: relative; z-index: 2;
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 28px;
-  padding: 48px 44px 40px;
-  width: 100%; max-width: 420px;
-  box-shadow: 0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
-  animation: loginFadeIn 0.6s cubic-bezier(0.16,1,0.3,1) both;
+.gov-hero-glow-l {
+  position:absolute;bottom:-60px;left:-60px;width:300px;height:300px;
+  background:radial-gradient(ellipse,rgba(45,63,191,.18),transparent 65%);
+  pointer-events:none;z-index:0;
 }
-@keyframes loginFadeIn {
-  from { opacity:0; transform: translateY(32px) scale(0.96); }
-  to   { opacity:1; transform: translateY(0) scale(1); }
+.gov-hero-inner {
+  position:relative;z-index:1;
+  display:flex;align-items:center;gap:32px;
+  padding:26px 0 20px;flex-wrap:wrap;
+  max-width:1440px;margin:0 auto;
 }
-.login-logo {
-  display: flex; align-items: center; gap: 14px;
-  margin-bottom: 32px;
+.gov-hero-left  { flex:1;min-width:260px; }
+.gov-hero-right { flex-shrink:0; }
+.gov-badge {
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);
+  border-radius:20px;padding:4px 12px;
+  font-size:10px;font-weight:600;color:rgba(255,255,255,.5);
+  letter-spacing:.6px;text-transform:uppercase;margin-bottom:11px;
 }
-.login-logo-emblem {
-  width: 48px; height: 48px; border-radius: 14px;
-  background: linear-gradient(135deg, var(--saffron), var(--indigo));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; box-shadow: 0 8px 24px rgba(255,107,0,0.35);
-  flex-shrink: 0;
+.gov-badge-dot {
+  width:6px;height:6px;border-radius:50%;background:#0D9E6B;
+  flex-shrink:0;animation:govPulse 2s infinite;
 }
-.login-logo-text { flex: 1; }
-.login-logo-name {
-  font-size: 22px; font-weight: 800; color: #fff;
-  letter-spacing: -0.5px;
+@keyframes govPulse {
+  0%  { box-shadow:0 0 0 0 rgba(13,158,107,.6); }
+  70% { box-shadow:0 0 0 7px rgba(13,158,107,0); }
+  100%{ box-shadow:0 0 0 0 rgba(13,158,107,0); }
 }
-.login-logo-sub {
-  font-size: 11px; color: rgba(255,255,255,0.5);
-  letter-spacing: 0.3px; margin-top: 1px;
+.gov-title {
+  font-size:48px;font-weight:800;color:#fff;
+  letter-spacing:-2px;line-height:1;margin-bottom:9px;
 }
-.login-title {
-  font-size: 26px; font-weight: 800; color: #fff;
-  letter-spacing: -0.5px; margin-bottom: 6px;
+.gov-title-accent {
+  background:linear-gradient(135deg,#FF6B00,#FF9A4A);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-.login-subtitle {
-  font-size: 13px; color: rgba(255,255,255,0.45);
-  margin-bottom: 32px; line-height: 1.5;
+.gov-subtitle {
+  font-size:13px;color:rgba(255,255,255,.5);line-height:1.65;margin-bottom:14px;max-width:480px;
 }
-.login-field {
-  margin-bottom: 16px;
+.gov-pills { display:flex;gap:7px;flex-wrap:wrap; }
+.gov-pill {
+  display:flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;padding:5px 12px;
+  font-size:11px;color:rgba(255,255,255,.7);font-weight:500;
+  transition:background .2s;
 }
-.login-field label {
-  display: block;
-  font-size: 11px; font-weight: 600; letter-spacing: 1px;
-  text-transform: uppercase; color: rgba(255,255,255,0.45);
-  margin-bottom: 8px;
+.gov-pill:hover { background:rgba(255,255,255,.13); }
+.gov-kpi-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px; }
+.gov-kpi {
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;padding:14px 16px;text-align:center;min-width:108px;
+  transition:background .2s;
 }
-.login-input-wrap {
-  position: relative;
+.gov-kpi:hover { background:rgba(255,255,255,.11); }
+.gov-kpi-val { font-size:27px;font-weight:800;letter-spacing:-1px;line-height:1; }
+.gov-kpi-lbl {
+  font-size:9px;color:rgba(255,255,255,.35);text-transform:uppercase;
+  letter-spacing:.6px;margin-top:4px;
 }
-.login-input-wrap .field-icon {
-  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-  font-size: 15px; pointer-events: none; opacity: 0.5;
+.gov-lang-bar {
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);
+  border-radius:10px;padding:9px 14px;
+  display:flex;align-items:center;gap:10px;justify-content:center;
 }
-.login-input {
-  width: 100%;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 12px;
-  padding: 13px 14px 13px 42px;
-  font-size: 14px; font-family: var(--font);
-  color: #fff; outline: none;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+.gov-lang-item { font-size:14px;font-weight:700; }
+.gov-lang-sep  { color:rgba(255,255,255,.18);font-size:11px; }
+.gov-flow-bar {
+  position:relative;z-index:1;
+  display:flex;align-items:stretch;
+  border-top:1px solid rgba(255,255,255,.07);
+  max-width:1440px;margin:0 auto;
 }
-.login-input::placeholder { color: rgba(255,255,255,0.25); }
-.login-input:focus {
-  border-color: rgba(255,107,0,0.6);
-  background: rgba(255,255,255,0.1);
-  box-shadow: 0 0 0 3px rgba(255,107,0,0.12);
+.gov-flow-step {
+  flex:1;display:flex;align-items:center;gap:9px;
+  padding:13px 14px;
+  border-right:1px solid rgba(255,255,255,.06);
+  transition:background .2s;cursor:default;
 }
-.login-input:focus + .field-focus-line { width: 100%; }
-.login-error {
-  font-size: 11px; color: #FF5252;
-  margin-top: 6px; padding-left: 4px;
-  display: none;
+.gov-flow-step:last-child { border-right:none; }
+.gov-flow-step:hover { background:rgba(255,255,255,.05); }
+.gov-flow-num {
+  width:26px;height:26px;border-radius:50%;
+  color:#fff;font-size:11px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
-.login-btn-row {
-  display: flex; gap: 10px; margin-top: 28px;
+.gov-flow-txt strong { font-size:11px;color:#fff;font-weight:700;display:block;margin-bottom:1px; }
+.gov-flow-txt span   { font-size:9px;color:rgba(255,255,255,.38); }
+.demo-strip {
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:12px 28px;background:var(--surface);
+  border-bottom:1px solid var(--line);position:relative;z-index:1;
 }
-.login-btn {
-  flex: 1;
-  background: linear-gradient(135deg, #FF6B00, #e05500);
-  border: none; border-radius: 12px;
-  padding: 14px 20px;
-  font-size: 14px; font-weight: 700; font-family: var(--font);
-  color: #fff; cursor: pointer;
-  box-shadow: 0 6px 24px rgba(255,107,0,0.35);
-  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
+.demo-strip-lbl {
+  display:flex;align-items:center;gap:6px;
+  font-size:10px;font-weight:700;color:var(--ink3);
+  text-transform:uppercase;letter-spacing:1.1px;white-space:nowrap;
 }
-.login-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 32px rgba(255,107,0,0.45);
-}
-.login-btn:active { transform: translateY(0); }
-.login-divider {
-  height: 1px; background: rgba(255,255,255,0.08);
-  margin: 28px 0 20px;
-}
-.login-footer {
-  font-size: 11px; color: rgba(255,255,255,0.3);
-  text-align: center; line-height: 1.6;
-}
-.login-footer strong { color: rgba(255,255,255,0.5); }
-/* Demo badge */
-.demo-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  background: rgba(45,63,191,0.3); border: 1px solid rgba(45,63,191,0.4);
-  border-radius: 20px; padding: 3px 10px;
-  font-size: 10px; font-weight: 600; color: rgba(160,180,255,0.8);
-  letter-spacing: 0.5px; margin-bottom: 28px;
+.demo-strip-pulse {
+  width:6px;height:6px;border-radius:50%;background:#FF6B00;
+  flex-shrink:0;animation:govPulse 2s infinite;
 }
 
-/* ════ INSIGHTS PANEL ════ */
-.insights-card {
-  background: linear-gradient(135deg, #1a1033 0%, #0f1e5e 100%);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 20px; padding: 22px;
-  color: #fff; position: relative; overflow: hidden;
-}
-.insights-card::before {
-  content: ''; position: absolute;
-  top: -40px; right: -40px;
-  width: 200px; height: 200px;
-  background: radial-gradient(ellipse, rgba(255,107,0,0.15), transparent 70%);
-  pointer-events: none;
-}
-.insights-card::after {
-  content: ''; position: absolute;
-  bottom: -30px; left: -30px;
-  width: 160px; height: 160px;
-  background: radial-gradient(ellipse, rgba(45,63,191,0.2), transparent 70%);
-  pointer-events: none;
-}
-.insights-header {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 18px; position: relative; z-index: 1;
-}
-.insights-header-title {
-  font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
-  text-transform: uppercase; color: rgba(255,255,255,0.5);
-}
-.insights-live-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #0D9E6B; box-shadow: 0 0 0 0 rgba(13,158,107,0.4);
-  animation: insightPulse 2s infinite; flex-shrink: 0;
-}
-@keyframes insightPulse {
-  0%   { box-shadow: 0 0 0 0 rgba(13,158,107,0.5); }
-  70%  { box-shadow: 0 0 0 6px rgba(13,158,107,0); }
-  100% { box-shadow: 0 0 0 0 rgba(13,158,107,0); }
-}
-.insights-metric-row {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-  margin-bottom: 16px; position: relative; z-index: 1;
-}
-.insight-metric {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px; padding: 14px 12px;
-  text-align: center;
-  transition: background 0.2s;
-}
-.insight-metric:hover { background: rgba(255,255,255,0.09); }
-.insight-metric-val {
-  font-size: 22px; font-weight: 800;
-  letter-spacing: -0.5px; margin-bottom: 4px;
-}
-.insight-metric-lbl {
-  font-size: 10px; color: rgba(255,255,255,0.4);
-  font-weight: 500; letter-spacing: 0.5px;
-}
-.insights-activity {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 14px; padding: 14px;
-  margin-bottom: 14px; position: relative; z-index: 1;
-}
-.insights-activity-title {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
-  text-transform: uppercase; color: rgba(255,255,255,0.35);
-  margin-bottom: 10px;
-}
-.activity-bar-row {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
-}
-.activity-bar-label {
-  font-size: 10px; color: rgba(255,255,255,0.45); width: 60px; flex-shrink: 0;
-}
-.activity-bar-track {
-  flex: 1; height: 6px; background: rgba(255,255,255,0.08);
-  border-radius: 3px; overflow: hidden;
-}
-.activity-bar-fill {
-  height: 100%; border-radius: 3px;
-  transition: width 1s cubic-bezier(0.16,1,0.3,1);
-}
-.activity-bar-val {
-  font-size: 10px; color: rgba(255,255,255,0.4); width: 28px; text-align: right; flex-shrink: 0;
-}
-.insights-agent-row {
-  display: flex; align-items: center; gap: 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 14px; padding: 12px 14px;
-  position: relative; z-index: 1;
-}
-.insights-agent-avatar {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: linear-gradient(135deg, #FF6B00, #2D3FBF);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; flex-shrink: 0;
-}
-.insights-agent-info { flex: 1; }
-.insights-agent-name { font-size: 13px; font-weight: 700; color: #fff; }
-.insights-agent-status { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 1px; }
-.insights-agent-badge {
-  font-size: 10px; font-weight: 700; padding: 3px 8px;
-  border-radius: 20px; background: rgba(13,158,107,0.2);
-  color: #12C882; border: 1px solid rgba(13,158,107,0.3);
-  letter-spacing: 0.5px;
-}
-
-/* ════ LOGOUT BTN IN HEADER ════ */
-.logout-btn {
-  background: rgba(224,32,32,0.1); border: 1px solid rgba(224,32,32,0.25);
-  border-radius: 20px; padding: 5px 12px;
-  font-size: 11px; font-weight: 700; font-family: var(--font);
-  color: var(--crimson); cursor: pointer;
-  display: flex; align-items: center; gap: 5px;
-  transition: background 0.2s, border-color 0.2s;
-  letter-spacing: 0.3px;
-}
-.logout-btn:hover { background: rgba(224,32,32,0.18); border-color: rgba(224,32,32,0.4); }
 </style>
 </head>
 <body>
-
-<!-- ══ LOGIN OVERLAY ══ -->
-<div id="login-overlay">
-  <!-- Close modal on backdrop click -->
-  <div style="position:absolute;inset:0;z-index:0" onclick="closeLoginModal()"></div>
-  <div class="login-box" style="position:relative;z-index:1">
-    <button onclick="closeLoginModal()" style="
-      position:absolute;top:16px;right:16px;
-      background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
-      border-radius:8px;width:28px;height:28px;
-      font-size:14px;color:rgba(255,255,255,0.5);cursor:pointer;
-      display:flex;align-items:center;justify-content:center;
-      transition:background 0.2s;" title="Close">✕</button>
-    <div class="login-logo">
-      <div class="login-logo-emblem">🎙️</div>
-      <div class="login-logo-text">
-        <div class="login-logo-name">VaaNi</div>
-        <div class="login-logo-sub">Karnataka 1092 AI Helpline · Government of Karnataka</div>
-      </div>
-    </div>
-
-    <div class="demo-badge">🔒 SECURE AGENT PORTAL</div>
-
-    <div class="login-title">Welcome back</div>
-    <div class="login-subtitle">Sign in to access the VaaNi helpline dashboard and begin handling citizen calls.</div>
-
-    <div class="login-field">
-      <label>Agent Username</label>
-      <div class="login-input-wrap">
-        <span class="field-icon">👤</span>
-        <input class="login-input" type="text" id="login-username" placeholder="e.g. agent.prashant" autocomplete="username" />
-      </div>
-      <div class="login-error" id="err-username">Please enter your username</div>
-    </div>
-
-    <div class="login-field">
-      <label>Phone Number</label>
-      <div class="login-input-wrap">
-        <span class="field-icon">📱</span>
-        <input class="login-input" type="tel" id="login-phone" placeholder="+91 XXXXX XXXXX" autocomplete="tel" />
-      </div>
-      <div class="login-error" id="err-phone">Please enter a valid 10-digit phone number</div>
-    </div>
-
-    <div class="login-field">
-      <label>Password</label>
-      <div class="login-input-wrap">
-        <span class="field-icon">🔑</span>
-        <input class="login-input" type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password" />
-      </div>
-      <div class="login-error" id="err-password">Please enter your password</div>
-    </div>
-
-    <div class="login-btn-row">
-      <button class="login-btn" onclick="doLogin()">
-        <span>🚀</span> Sign In to Dashboard
-      </button>
-    </div>
-
-    <div class="login-divider"></div>
-    <div class="login-footer">
-      <strong>Demo credentials:</strong> any username · any 10-digit phone · any password<br>
-      This portal is for authorised Karnataka Government agents only.
-    </div>
-  </div>
-</div>
 
 <!-- ══ HEADER ══ -->
 <header class="header">
@@ -1393,176 +1172,122 @@ body::before {
         letter-spacing:0.3px;
       ">🟢 LIVE AI</div>
     </div>
-    <div id="agent-name-chip" style="display:none;align-items:center;gap:6px;
-      background:var(--indigo-xl);border:1px solid rgba(45,63,191,0.15);
-      border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--indigo)">
-      <span>👤</span><span id="header-agent-name">Agent</span>
-    </div>
-    <button id="header-login-btn" onclick="openLoginModal()" style="
-      background:linear-gradient(135deg,var(--saffron),var(--indigo));
-      border:none;border-radius:20px;padding:6px 14px;
-      font-size:11px;font-weight:700;font-family:var(--font);
-      color:#fff;cursor:pointer;display:flex;align-items:center;gap:5px;
-      box-shadow:0 3px 12px rgba(255,107,0,0.3);
-      transition:transform 0.15s,box-shadow 0.15s;letter-spacing:0.3px;">
-      🔐 Login
-    </button>
-    <button class="logout-btn" id="logout-btn" onclick="doLogout()" style="display:none">
-      ⬅️ Logout
-    </button>
   </div>
 </header>
+
+<!-- ══ GOV HERO BANNER ══ -->
+<div class="gov-hero">
+  <div class="gov-hero-dots"></div>
+  <div class="gov-hero-glow-r"></div>
+  <div class="gov-hero-glow-l"></div>
+  <div class="gov-hero-inner">
+    <div class="gov-hero-left">
+      <div class="gov-badge">
+        <span class="gov-badge-dot"></span>
+        Government of Karnataka &nbsp;·&nbsp; Dept. of Personnel &amp; Administrative Reforms (e-Governance)
+      </div>
+      <div class="gov-title">VaaNi <span class="gov-title-accent">AI</span></div>
+      <div class="gov-subtitle">
+        Accurate Understanding Before Response —<br>
+        Voice-to-Voice AI Interpreter for the 1092 Citizen Helpline
+      </div>
+      <div class="gov-pills">
+        <div class="gov-pill">🗣️ Multilingual</div>
+        <div class="gov-pill">🧭 Dialect-Aware</div>
+        <div class="gov-pill">💛 Emotion-Sensitive</div>
+        <div class="gov-pill">✅ Verify-First</div>
+        <div class="gov-pill">🛡️ Human Takeover</div>
+      </div>
+    </div>
+    <div class="gov-hero-right">
+      <div class="gov-kpi-grid">
+        <div class="gov-kpi">
+          <div class="gov-kpi-val" style="color:#FF9A4A" id="ins-total">0</div>
+          <div class="gov-kpi-lbl">Calls Today</div>
+        </div>
+        <div class="gov-kpi">
+          <div class="gov-kpi-val" style="color:#12C882" id="ins-accuracy">—</div>
+          <div class="gov-kpi-lbl">AI Accuracy</div>
+        </div>
+        <div class="gov-kpi">
+          <div class="gov-kpi-val" style="color:#7B8FF7" id="ins-confirmed">0</div>
+          <div class="gov-kpi-lbl">Verified</div>
+        </div>
+        <div class="gov-kpi">
+          <div class="gov-kpi-val" style="color:#FF5252" id="ins-escalated">0</div>
+          <div class="gov-kpi-lbl">Escalated</div>
+        </div>
+      </div>
+      <div class="gov-lang-bar">
+        <span class="gov-lang-item" style="color:#FF6B00">ಕನ್ನಡ</span>
+        <span class="gov-lang-sep">·</span>
+        <span class="gov-lang-item" style="color:#7B8FF7">हिंदी</span>
+        <span class="gov-lang-sep">·</span>
+        <span class="gov-lang-item" style="color:#12C882">English</span>
+        <span class="gov-lang-sep">·</span>
+        <span class="gov-lang-item" style="color:#FFAD33">తెలుగు</span>
+      </div>
+    </div>
+  </div>
+  <div class="gov-flow-bar">
+    <div class="gov-flow-step">
+      <div class="gov-flow-num" style="background:#FF6B00">1</div>
+      <div class="gov-flow-txt"><strong>Citizen Speaks</strong><span>Natural language / dialect</span></div>
+    </div>
+    <div class="gov-flow-step">
+      <div class="gov-flow-num" style="background:#2D3FBF">2</div>
+      <div class="gov-flow-txt"><strong>AI Interprets</strong><span>Dialect + emotion-aware</span></div>
+    </div>
+    <div class="gov-flow-step">
+      <div class="gov-flow-num" style="background:#D97700">3</div>
+      <div class="gov-flow-txt"><strong>AI Verifies</strong><span>"Did I understand you?"</span></div>
+    </div>
+    <div class="gov-flow-step">
+      <div class="gov-flow-num" style="background:#0D9E6B">4</div>
+      <div class="gov-flow-txt"><strong>Agent Responds</strong><span>With full context</span></div>
+    </div>
+    <div class="gov-flow-step">
+      <div class="gov-flow-num" style="background:#E02020">5</div>
+      <div class="gov-flow-txt"><strong>Human Takeover</strong><span>If AI unsure / distress</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DEMO STRIP ══ -->
+<div class="demo-strip">
+  <div class="demo-strip-lbl">
+    <span class="demo-strip-pulse"></span>
+    Live Demo Scenarios
+  </div>
+  <div class="scenario-cards">
+    <button class="sc-btn" onclick="runScenario(0)">
+      <span class="sc-icon">🌾</span>Ration Card<span class="lang-tag">ಕನ್ನಡ</span>
+    </button>
+    <button class="sc-btn" onclick="runScenario(1)">
+      <span class="sc-icon">👵</span>Pension Issue<span class="lang-tag">ಕನ್ನಡ</span>
+    </button>
+    <button class="sc-btn" onclick="runScenario(2)">
+      <span class="sc-icon">💧</span>Water Supply<span class="lang-tag">हिंदी</span>
+    </button>
+    <button class="sc-btn" onclick="runScenario(3)">
+      <span class="sc-icon">🚨</span>Emergency<span class="lang-tag">URGENT</span>
+    </button>
+    <button class="sc-btn" onclick="runScenario(4)">
+      <span class="sc-icon">📋</span>Land Records<span class="lang-tag">English</span>
+    </button>
+  </div>
+  <div class="lang-toggle" style="margin-left:auto">
+    <button class="lang-btn on" onclick="setVerifLang('kannada',this)">ಕನ್ನಡ</button>
+    <button class="lang-btn" onclick="setVerifLang('hindi',this)">हिंदी</button>
+    <button class="lang-btn" onclick="setVerifLang('english',this)">Eng</button>
+  </div>
+</div>
 
 <!-- ══ MAIN PAGE ══ -->
 <div class="page">
 
-  <!-- ── SCENARIO STRIP ── -->
-  <div class="scenario-strip">
-    <div class="strip-label">Live Demo</div>
-    <div class="scenario-cards">
-      <button class="sc-btn" onclick="runScenario(0)">
-        <span class="sc-icon">🌾</span>
-        Ration Card
-        <span class="lang-tag">ಕನ್ನಡ</span>
-      </button>
-      <button class="sc-btn" onclick="runScenario(1)">
-        <span class="sc-icon">👵</span>
-        Pension Issue
-        <span class="lang-tag">ಕನ್ನಡ</span>
-      </button>
-      <button class="sc-btn" onclick="runScenario(2)">
-        <span class="sc-icon">💧</span>
-        Water Supply
-        <span class="lang-tag">हिंदी</span>
-      </button>
-      <button class="sc-btn" onclick="runScenario(3)">
-        <span class="sc-icon">🚨</span>
-        Emergency
-        <span class="lang-tag">URGENT</span>
-      </button>
-      <button class="sc-btn" onclick="runScenario(4)">
-        <span class="sc-icon">📋</span>
-        Land Records
-        <span class="lang-tag">English</span>
-      </button>
-    </div>
-    <div class="lang-toggle">
-      <button class="lang-btn on" onclick="setVerifLang('kannada',this)">ಕನ್ನಡ</button>
-      <button class="lang-btn" onclick="setVerifLang('hindi',this)">हिंदी</button>
-      <button class="lang-btn" onclick="setVerifLang('english',this)">Eng</button>
-    </div>
-  </div>
-
-  <!-- ── HOW IT WORKS GUIDE ── -->
-  <div id="howto-banner" style="
-    grid-column: 1 / -1;
-    background: linear-gradient(135deg, #fff8f0 0%, #f0f2ff 100%);
-    border: 1.5px solid rgba(255,107,0,0.15);
-    border-radius: 20px;
-    padding: 18px 24px;
-    display: flex; align-items: center; gap: 0;
-  ">
-    <div style="flex:1;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-      <div style="font-size:13px;font-weight:700;color:var(--ink2);white-space:nowrap">How it works:</div>
-      <!-- Steps -->
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:7px">
-          <div style="width:26px;height:26px;border-radius:50%;background:var(--saffron);color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
-          <span style="font-size:12px;color:var(--ink2)">Citizen calls &amp; speaks<br><span style="color:var(--ink3);font-size:11px">in their own language</span></span>
-        </div>
-        <div style="color:var(--ink4);font-size:16px;padding:0 4px">→</div>
-        <div style="display:flex;align-items:center;gap:7px">
-          <div style="width:26px;height:26px;border-radius:50%;background:var(--indigo);color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
-          <span style="font-size:12px;color:var(--ink2)">AI interprets<br><span style="color:var(--ink3);font-size:11px">dialect + emotion aware</span></span>
-        </div>
-        <div style="color:var(--ink4);font-size:16px;padding:0 4px">→</div>
-        <div style="display:flex;align-items:center;gap:7px">
-          <div style="width:26px;height:26px;border-radius:50%;background:var(--amber);color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
-          <span style="font-size:12px;color:var(--ink2)">AI verifies<br><span style="color:var(--ink3);font-size:11px">"Did I understand you?"</span></span>
-        </div>
-        <div style="color:var(--ink4);font-size:16px;padding:0 4px">→</div>
-        <div style="display:flex;align-items:center;gap:7px">
-          <div style="width:26px;height:26px;border-radius:50%;background:var(--jade);color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
-          <span style="font-size:12px;color:var(--ink2)">Agent responds<br><span style="color:var(--ink3);font-size:11px">with full context</span></span>
-        </div>
-        <div style="color:var(--ink4);font-size:16px;padding:0 4px">→</div>
-        <div style="display:flex;align-items:center;gap:7px">
-          <div style="width:26px;height:26px;border-radius:50%;background:var(--crimson);color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">5</div>
-          <span style="font-size:12px;color:var(--ink2)">Human takeover<br><span style="color:var(--ink3);font-size:11px">if AI is unsure</span></span>
-        </div>
-      </div>
-    </div>
-    <button onclick="document.getElementById('howto-banner').style.display='none'" style="
-      background:none;border:none;color:var(--ink4);
-      font-size:18px;cursor:pointer;padding:4px 8px;
-      border-radius:6px; flex-shrink:0; margin-left:12px;
-    " title="Dismiss">✕</button>
-  </div>
-
-  <!-- ── LEFT MAIN COLUMN ── -->
+  <!-- LEFT COLUMN -->
   <div class="main-col">
-
-    <!-- ── INSIGHTS PANEL ── -->
-    <div class="insights-card">
-      <div class="insights-header">
-        <div class="insights-live-dot"></div>
-        <div class="insights-header-title">Live Dashboard Insights</div>
-        <div style="margin-left:auto;font-size:10px;color:rgba(255,255,255,0.3)" id="insights-time">—</div>
-      </div>
-
-      <div class="insights-metric-row">
-        <div class="insight-metric">
-          <div class="insight-metric-val" style="color:#FF9A4A" id="ins-total">0</div>
-          <div class="insight-metric-lbl">Total Calls</div>
-        </div>
-        <div class="insight-metric">
-          <div class="insight-metric-val" style="color:#12C882" id="ins-accuracy">—</div>
-          <div class="insight-metric-lbl">AI Accuracy</div>
-        </div>
-        <div class="insight-metric">
-          <div class="insight-metric-val" style="color:#FF5252" id="ins-escalated">0</div>
-          <div class="insight-metric-lbl">Escalated</div>
-        </div>
-      </div>
-
-      <div class="insights-activity">
-        <div class="insights-activity-title">Issue Category Breakdown</div>
-        <div class="activity-bar-row">
-          <div class="activity-bar-label">Ration Card</div>
-          <div class="activity-bar-track"><div class="activity-bar-fill" id="ab-ration" style="width:72%;background:linear-gradient(90deg,#FF6B00,#FF9A4A)"></div></div>
-          <div class="activity-bar-val" id="abv-ration">72%</div>
-        </div>
-        <div class="activity-bar-row">
-          <div class="activity-bar-label">Pension</div>
-          <div class="activity-bar-track"><div class="activity-bar-fill" id="ab-pension" style="width:55%;background:linear-gradient(90deg,#2D3FBF,#4A5DD9)"></div></div>
-          <div class="activity-bar-val" id="abv-pension">55%</div>
-        </div>
-        <div class="activity-bar-row">
-          <div class="activity-bar-label">Water</div>
-          <div class="activity-bar-track"><div class="activity-bar-fill" id="ab-water" style="width:38%;background:linear-gradient(90deg,#0D9E6B,#12C882)"></div></div>
-          <div class="activity-bar-val" id="abv-water">38%</div>
-        </div>
-        <div class="activity-bar-row">
-          <div class="activity-bar-label">Emergency</div>
-          <div class="activity-bar-track"><div class="activity-bar-fill" id="ab-emergency" style="width:18%;background:linear-gradient(90deg,#E02020,#FF5252)"></div></div>
-          <div class="activity-bar-val" id="abv-emergency">18%</div>
-        </div>
-        <div class="activity-bar-row">
-          <div class="activity-bar-label">Land Records</div>
-          <div class="activity-bar-track"><div class="activity-bar-fill" id="ab-land" style="width:29%;background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div></div>
-          <div class="activity-bar-val" id="abv-land">29%</div>
-        </div>
-      </div>
-
-      <div class="insights-agent-row">
-        <div class="insights-agent-avatar">👤</div>
-        <div class="insights-agent-info">
-          <div class="insights-agent-name" id="ins-agent-name">Agent</div>
-          <div class="insights-agent-status" id="ins-agent-status">Karnataka 1092 Helpline · On duty</div>
-        </div>
-        <div class="insights-agent-badge">● ONLINE</div>
-      </div>
-    </div>
 
     <!-- Citizen Voice Card -->
     <div class="card">
@@ -2120,7 +1845,7 @@ function renderInterpretation(result) {
   // Meta pills
   const langLabel = (result.language_detected||'kannada').charAt(0).toUpperCase()+(result.language_detected||'kannada').slice(1);
   const dialectLabel = (result.dialect_detected||'standard').charAt(0).toUpperCase()+(result.dialect_detected||'standard').slice(1);
-  const catLabel = (result.issue_category||'other').replace(/_/g,' ').replace(/\\b\\w/g,l=>l.toUpperCase());
+  const catLabel = (result.issue_category||'other').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
   document.getElementById('mpill-lang').textContent='🗣 '+langLabel;
   document.getElementById('mpill-dialect').textContent='📍 '+dialectLabel;
   document.getElementById('mpill-category').textContent='📂 '+catLabel;
@@ -2242,12 +1967,16 @@ function getStreamDisplay() {
   return el;
 }
 
-// ── AI via secure backend proxy (API key never exposed to browser) ──
+// ── OPENROUTER LIVE AI (hardcoded key — works automatically) ──
+const OPENROUTER_KEY = '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';
+const OPENROUTER_API = 'https://openrouter.ai/api/v1/chat/completions';
+const OPENROUTER_MODEL = 'anthropic/claude-3.5-haiku';
+
 async function callClaudeAPI(text, language) {
   try {
     return await callOpenRouter(text, language);
   } catch(e) {
-    console.warn('AI call failed, using demo data:', e.message);
+    console.warn('OpenRouter failed, using demo data:', e.message);
     return getMockResult(text, language);
   }
 }
@@ -2256,25 +1985,37 @@ async function callOpenRouter(text, language) {
   const display = getStreamDisplay();
   display.textContent = '⚡ Connecting to AI...';
 
-  const response = await fetch('/interpret', {
+  const response = await fetch(OPENROUTER_API, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + OPENROUTER_KEY,
+      'HTTP-Referer': 'https://vaani-1092.karnataka.gov.in',
+      'X-Title': 'VaaNi 1092 Helpline'
+    },
     body: JSON.stringify({
-      session_id: STATE.sessionId || 'frontend',
-      text: text,
-      language: language
+      model: OPENROUTER_MODEL,
+      max_tokens: 1000,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: `Citizen said (in ${language}): "${text}"\n\nInterpret and respond in the exact JSON format.` }
+      ]
     })
   });
 
   if (!response.ok) {
     const err = await response.text();
-    throw new Error('Backend ' + response.status + ': ' + err.slice(0,100));
+    throw new Error('OpenRouter ' + response.status + ': ' + err.slice(0,100));
   }
 
   const data = await response.json();
   display.textContent = '✓ AI responded!';
   setTimeout(() => { if(display) display.remove(); }, 800);
-  return data;
+
+  let txt = data.choices[0].message.content;
+  if (txt.includes('```json')) txt = txt.split('```json')[1].split('```')[0].trim();
+  else if (txt.includes('```')) txt = txt.split('```')[1].split('```')[0].trim();
+  return JSON.parse(txt);
 }
 
 async function callViaBackend(text, language) {
@@ -2619,111 +2360,6 @@ document.addEventListener('keydown', (e) => {
   const n = parseInt(e.key);
   if (n >= 1 && n <= 5) runScenario(n - 1);
 });
-
-// ══ LOGIN / LOGOUT ══
-function openLoginModal() {
-  const overlay = document.getElementById('login-overlay');
-  overlay.classList.add('open');
-  overlay.style.opacity = '0';
-  overlay.style.transition = 'opacity 0.3s ease';
-  setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-}
-
-function closeLoginModal() {
-  const overlay = document.getElementById('login-overlay');
-  overlay.style.transition = 'opacity 0.25s ease';
-  overlay.style.opacity = '0';
-  setTimeout(() => { overlay.classList.remove('open'); }, 250);
-}
-
-function doLogin() {
-  const username = document.getElementById('login-username').value.trim();
-  const phone    = document.getElementById('login-phone').value.replace(/\\D/g,'');
-  const password = document.getElementById('login-password').value;
-
-  let valid = true;
-  document.getElementById('err-username').style.display = 'none';
-  document.getElementById('err-phone').style.display    = 'none';
-  document.getElementById('err-password').style.display = 'none';
-
-  if (!username) { document.getElementById('err-username').style.display = 'block'; valid = false; }
-  if (phone.length < 10) { document.getElementById('err-phone').style.display = 'block'; valid = false; }
-  if (!password) { document.getElementById('err-password').style.display = 'block'; valid = false; }
-  if (!valid) return;
-
-  sessionStorage.setItem('vaani_agent', username);
-  sessionStorage.setItem('vaani_phone', phone);
-
-  // Close modal
-  closeLoginModal();
-
-  // Update header
-  document.getElementById('header-agent-name').textContent  = username;
-  document.getElementById('agent-name-chip').style.display  = 'flex';
-  document.getElementById('logout-btn').style.display       = 'flex';
-  document.getElementById('header-login-btn').style.display = 'none';
-
-  // Update insights panel
-  document.getElementById('ins-agent-name').textContent   = username;
-  document.getElementById('ins-agent-status').textContent = 'Karnataka 1092 · +91-' + phone.slice(0,5) + 'XXXXX';
-}
-
-function doLogout() {
-  sessionStorage.removeItem('vaani_agent');
-  sessionStorage.removeItem('vaani_phone');
-  document.getElementById('header-agent-name').textContent  = 'Agent';
-  document.getElementById('agent-name-chip').style.display  = 'none';
-  document.getElementById('logout-btn').style.display       = 'none';
-  document.getElementById('header-login-btn').style.display = 'flex';
-  // Clear fields
-  document.getElementById('login-username').value = '';
-  document.getElementById('login-phone').value    = '';
-  document.getElementById('login-password').value = '';
-}
-
-// Allow Enter key to submit login
-document.addEventListener('keydown', e => {
-  if (document.getElementById('login-overlay').classList.contains('open')) {
-    if (e.key === 'Enter') doLogin();
-    if (e.key === 'Escape') closeLoginModal();
-  }
-});
-
-// ══ INSIGHTS LIVE CLOCK ══
-function updateInsightsClock() {
-  const now = new Date();
-  document.getElementById('insights-time').textContent =
-    now.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-setInterval(updateInsightsClock, 1000);
-updateInsightsClock();
-
-// ══ INSIGHTS STATS SYNC ══
-async function syncInsights() {
-  try {
-    const r = await fetch('/stats');
-    const d = await r.json();
-    document.getElementById('ins-total').textContent     = d.total_calls || 0;
-    document.getElementById('ins-accuracy').textContent  = (d.accuracy_rate || 0) + '%';
-    document.getElementById('ins-escalated').textContent = d.escalated || 0;
-  } catch(e) {}
-}
-syncInsights();
-setInterval(syncInsights, 15000);
-
-// Restore session on page load
-(function() {
-  const agent = sessionStorage.getItem('vaani_agent');
-  const phone = sessionStorage.getItem('vaani_phone');
-  if (agent) {
-    document.getElementById('header-agent-name').textContent  = agent;
-    document.getElementById('agent-name-chip').style.display  = 'flex';
-    document.getElementById('logout-btn').style.display       = 'flex';
-    document.getElementById('header-login-btn').style.display = 'none';
-    document.getElementById('ins-agent-name').textContent     = agent;
-    if (phone) document.getElementById('ins-agent-status').textContent = 'Karnataka 1092 · +91-' + phone.slice(0,5) + 'XXXXX';
-  }
-})();
 </script>
 </body>
 </html>
