@@ -1285,7 +1285,7 @@ body {
 </header>
 
 <!-- ══ GOV HERO BANNER ══ -->
-<div class="gov-hero">
+<div class="gov-hero" id="section-dashboard">
   <div class="gov-hero-dots"></div>
   <div class="gov-hero-glow-r"></div>
   <div class="gov-hero-glow-l"></div>
@@ -1360,7 +1360,7 @@ body {
 </div>
 
 <!-- ══ DEMO STRIP ══ -->
-<div class="demo-strip">
+<div class="demo-strip" id="section-simulation">
   <div class="demo-strip-lbl">
     <span class="demo-strip-pulse"></span>
     Live Demo Scenarios
@@ -1396,7 +1396,7 @@ body {
   <div class="main-col">
 
     <!-- Citizen Voice Card -->
-    <div class="card">
+    <div class="card" id="section-voice">
       <div class="card-title">
         <div class="card-title-dot" style="background:var(--saffron)"></div>
         Citizen Voice Input
@@ -1469,7 +1469,7 @@ body {
     </div>
 
     <!-- AI Interpretation Card -->
-    <div class="card interp-card">
+    <div class="card interp-card" id="section-ai-insights">
       <div class="card-title">
         <div class="card-title-dot" style="background:var(--indigo)"></div>
         AI Interpretation
@@ -1582,7 +1582,7 @@ body {
 
       <!-- Transcript Card -->
       <div class="card">
-        <div class="card-title">
+        <div class="card-title" id="section-call-logs">
           <div class="card-title-dot" style="background:var(--jade)"></div>
           Live Transcript
         </div>
@@ -2485,9 +2485,34 @@ async function syncInsights() {
     if (hc) hc.textContent = d.total_calls || 0;
   } catch(e) { console.warn('Stats sync failed:', e); }
 }
-// Run on load and every 10 seconds
+// Run on load and every 5 seconds
 syncInsights();
 setInterval(syncInsights, 5000);
+
+// ── Smooth scroll for footer links ──
+function smoothTo(id) {
+  event.preventDefault();
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Footer system status live check ──
+async function checkFooterStatus() {
+  try {
+    const r = await fetch('/health');
+    const d = await r.json();
+    const dot = document.getElementById('footer-status-dot');
+    if (dot) {
+      dot.style.background = d.status === 'ok' ? '#12C882' : '#FF5252';
+      dot.title = d.status === 'ok' ? 'System Online' : 'System Issue';
+    }
+  } catch(e) {
+    const dot = document.getElementById('footer-status-dot');
+    if (dot) dot.style.background = '#FF5252';
+  }
+}
+checkFooterStatus();
+setInterval(checkFooterStatus, 30000);
 </script>
 
 <!-- ══ GOVERNMENT FOOTER ══ -->
@@ -2511,11 +2536,12 @@ setInterval(syncInsights, 5000);
     <div>
       <div class="gov-footer-col-title">Quick Links</div>
       <ul class="gov-footer-links">
-        <li><a href="/">Dashboard</a></li>
+        <li><a href="#section-dashboard" onclick="smoothTo('section-dashboard')">Dashboard</a></li>
+        <li><a href="#section-simulation" onclick="smoothTo('section-simulation')">Live Call Simulation</a></li>
         <li><a href="/admin">Admin Panel</a></li>
-        <li><a href="/stats">Live Statistics</a></li>
-        <li><a href="/health">System Health</a></li>
-        <li><a href="/training-data">Training Data</a></li>
+        <li><a href="#section-call-logs" onclick="smoothTo('section-call-logs')">Call Logs</a></li>
+        <li><a href="#section-ai-insights" onclick="smoothTo('section-ai-insights')">AI Insights</a></li>
+        <li><a href="/health" target="_blank" id="footer-health-link">System Status <span id="footer-status-dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#12C882;margin-left:4px;vertical-align:middle"></span></a></li>
       </ul>
     </div>
     <div>
