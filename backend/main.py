@@ -2549,13 +2549,20 @@ setInterval(syncInsights, 5000);
     </div>
   </div>
   <hr class="gov-footer-divider">
+  <!-- Disclaimer bar -->
+  <div style="background:rgba(255,107,0,0.08);border-top:1px solid rgba(255,107,0,0.2);padding:10px 40px;text-align:center">
+    <p style="font-size:11px;color:rgba(255,200,100,0.85);margin:0;line-height:1.6">
+      ⚠️ <strong>Disclaimer:</strong> This is a prototype demo and not an official government system. &nbsp;·&nbsp;
+      AI-powered prototype demonstrating multilingual voice understanding and verification for citizen services.
+    </p>
+  </div>
   <div class="gov-footer-bottom">
     <div class="gov-footer-bottom-left">
-      <span>© 2025 Government of Karnataka. All Rights Reserved.</span>
+      <span>Prototype for AI for Bharat Hackathon</span>
       <span>·</span><a href="#">Privacy Policy</a>
       <span>·</span><a href="#">Terms of Use</a>
       <span>·</span><a href="#">Accessibility</a>
-      <span>·</span><span>Designed &amp; Developed for Karnataka Hackathon 2025</span>
+      <span>·</span><span>Prototype built for AI for Bharat Hackathon</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
       <div class="gov-footer-bottom-badge"><span></span> System Online</div>
