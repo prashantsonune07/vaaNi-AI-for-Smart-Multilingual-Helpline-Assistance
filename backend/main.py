@@ -1138,6 +1138,115 @@ body {
   flex-shrink:0;animation:govPulse 2s infinite;
 }
 
+
+/* ════ GOVERNMENT FOOTER ════ */
+.gov-footer {
+  background: #1a2a3a;
+  color: #cdd5e0;
+  font-family: var(--font);
+  margin-top: 40px;
+  border-top: 4px solid;
+  border-image: linear-gradient(90deg,#FF6B00,#FF9A4A,#2D3FBF,#FF6B00) 1;
+}
+.gov-footer-top {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: 36px;
+  padding: 36px 40px 28px;
+  max-width: 1440px; margin: 0 auto;
+}
+.gov-footer-col-title {
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.2px;
+  color: #fff; margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(255,107,0,0.4);
+  display: inline-block;
+}
+.gov-footer-about p {
+  font-size: 12px; line-height: 1.7;
+  color: rgba(255,255,255,0.5); margin-bottom: 12px;
+}
+.gov-footer-badge-row {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;
+}
+.gov-footer-badge {
+  font-size: 10px; font-weight: 600;
+  background: rgba(255,107,0,0.15);
+  border: 1px solid rgba(255,107,0,0.3);
+  color: #FF9A4A; border-radius: 20px;
+  padding: 3px 10px; letter-spacing: 0.3px;
+}
+.gov-footer-links { list-style: none; padding: 0; margin: 0; }
+.gov-footer-links li { margin-bottom: 9px; }
+.gov-footer-links a {
+  font-size: 12px; color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: color 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.gov-footer-links a:hover { color: #FF9A4A; }
+.gov-footer-links a::before {
+  content: '›'; color: #FF6B00; font-size: 14px; font-weight: 700;
+}
+.gov-footer-contact-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 10px;
+}
+.gov-footer-contact-icon {
+  font-size: 14px; flex-shrink: 0; margin-top: 1px;
+}
+.gov-footer-contact-text {
+  font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5;
+}
+.gov-footer-contact-text strong {
+  color: rgba(255,255,255,0.8); display: block; margin-bottom: 1px;
+}
+.gov-footer-lang-row {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px;
+}
+.gov-footer-lang {
+  font-size: 11px; font-weight: 600;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px; padding: 3px 10px;
+  color: rgba(255,255,255,0.6);
+}
+.gov-footer-divider {
+  border: none; border-top: 1px solid rgba(255,255,255,0.07);
+  margin: 0 40px;
+}
+.gov-footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+  padding: 14px 40px;
+  max-width: 1440px; margin: 0 auto;
+  font-size: 11px; color: rgba(255,255,255,0.3);
+}
+.gov-footer-bottom-left { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.gov-footer-bottom a {
+  color: rgba(255,255,255,0.35); text-decoration: none;
+  transition: color 0.2s;
+}
+.gov-footer-bottom a:hover { color: #FF9A4A; }
+.gov-footer-bottom-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(13,158,107,0.12);
+  border: 1px solid rgba(13,158,107,0.25);
+  border-radius: 20px; padding: 3px 10px;
+  font-size: 10px; color: #12C882; font-weight: 600;
+}
+.gov-footer-bottom-badge span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #12C882; animation: govPulse 2s infinite;
+}
+@media (max-width: 900px) {
+  .gov-footer-top { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .gov-footer-top { grid-template-columns: 1fr; padding: 24px 20px; }
+  .gov-footer-bottom { padding: 12px 20px; }
+}
 </style>
 </head>
 <body>
@@ -2380,6 +2489,81 @@ async function syncInsights() {
 syncInsights();
 setInterval(syncInsights, 5000);
 </script>
+
+<!-- ══ GOVERNMENT FOOTER ══ -->
+<footer class="gov-footer">
+  <div class="gov-footer-top">
+    <div class="gov-footer-about">
+      <div class="gov-footer-col-title">VaaNi — 1092 AI Helpline</div>
+      <p>An AI-assisted voice-to-voice system for Karnataka's 1092 citizen helpline. Ensures accurate understanding across languages, dialects, and emotional contexts before enabling agent response.</p>
+      <div class="gov-footer-badge-row">
+        <span class="gov-footer-badge">🗣️ Multilingual</span>
+        <span class="gov-footer-badge">🧭 Dialect-Aware</span>
+        <span class="gov-footer-badge">💛 Emotion-Sensitive</span>
+        <span class="gov-footer-badge">🛡️ Human Takeover</span>
+      </div>
+      <div class="gov-footer-lang-row" style="margin-top:14px">
+        <span class="gov-footer-lang" style="color:#FF9A4A">ಕನ್ನಡ</span>
+        <span class="gov-footer-lang" style="color:#7B8FF7">हिंदी</span>
+        <span class="gov-footer-lang" style="color:#12C882">English</span>
+      </div>
+    </div>
+    <div>
+      <div class="gov-footer-col-title">Quick Links</div>
+      <ul class="gov-footer-links">
+        <li><a href="/">Dashboard</a></li>
+        <li><a href="/admin">Admin Panel</a></li>
+        <li><a href="/stats">Live Statistics</a></li>
+        <li><a href="/health">System Health</a></li>
+        <li><a href="/training-data">Training Data</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="gov-footer-col-title">Government</div>
+      <ul class="gov-footer-links">
+        <li><a href="https://www.karnataka.gov.in" target="_blank">Government of Karnataka</a></li>
+        <li><a href="https://dpar.karnataka.gov.in" target="_blank">DPAR (e-Governance)</a></li>
+        <li><a href="https://india.gov.in" target="_blank">India.gov.in</a></li>
+        <li><a href="https://digitalindia.gov.in" target="_blank">Digital India</a></li>
+        <li><a href="https://services.india.gov.in" target="_blank">National Services Portal</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="gov-footer-col-title">Contact &amp; Support</div>
+      <div class="gov-footer-contact-item">
+        <span class="gov-footer-contact-icon">📍</span>
+        <div class="gov-footer-contact-text"><strong>Address</strong>DPAR (e-Governance), M.S. Building, Dr. B.R. Ambedkar Veedhi, Bengaluru – 560 001, Karnataka</div>
+      </div>
+      <div class="gov-footer-contact-item">
+        <span class="gov-footer-contact-icon">📞</span>
+        <div class="gov-footer-contact-text"><strong>Helpline</strong>1092 (Toll Free)</div>
+      </div>
+      <div class="gov-footer-contact-item">
+        <span class="gov-footer-contact-icon">✉️</span>
+        <div class="gov-footer-contact-text"><strong>Email</strong>helpdesk@karnataka.gov.in</div>
+      </div>
+      <div class="gov-footer-contact-item">
+        <span class="gov-footer-contact-icon">🌐</span>
+        <div class="gov-footer-contact-text"><strong>Portal</strong>karnataka.gov.in</div>
+      </div>
+    </div>
+  </div>
+  <hr class="gov-footer-divider">
+  <div class="gov-footer-bottom">
+    <div class="gov-footer-bottom-left">
+      <span>© 2025 Government of Karnataka. All Rights Reserved.</span>
+      <span>·</span><a href="#">Privacy Policy</a>
+      <span>·</span><a href="#">Terms of Use</a>
+      <span>·</span><a href="#">Accessibility</a>
+      <span>·</span><span>Designed &amp; Developed for Karnataka Hackathon 2025</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="gov-footer-bottom-badge"><span></span> System Online</div>
+      <span style="color:rgba(255,255,255,0.2)">|</span>
+      <span>Powered by VaaNi AI v2.0</span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
 """
