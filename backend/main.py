@@ -1139,117 +1139,234 @@ body {
 }
 
 
-/* ════ GOVERNMENT FOOTER ════ */
-.gov-footer {
-  background: #1a2a3a;
-  color: #cdd5e0;
+/* ══ LOGIN PAGE ══ */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
   font-family: var(--font);
-  margin-top: 40px;
-  border-top: 4px solid;
-  border-image: linear-gradient(90deg,#FF6B00,#FF9A4A,#2D3FBF,#FF6B00) 1;
 }
-.gov-footer-top {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
-  gap: 36px;
-  padding: 36px 40px 28px;
-  max-width: 1440px; margin: 0 auto;
+
+.login-top-bar {
+  position: absolute; top: 0; left: 0; right: 0;
+  background: linear-gradient(135deg, #1A0A00 0%, #0A1040 100%);
+  border-bottom: 3px solid var(--saffron);
+  padding: 0 28px; height: 56px;
+  display: flex; align-items: center; gap: 12px;
 }
-.gov-footer-col-title {
-  font-size: 12px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1.2px;
-  color: #fff; margin-bottom: 14px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid rgba(255,107,0,0.4);
-  display: inline-block;
+.login-brand-badge {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--saffron), var(--saffron-l));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-kn); font-size: 18px; font-weight: 700; color: white;
+  box-shadow: 0 4px 12px rgba(255,107,0,0.4);
 }
-.gov-footer-about p {
-  font-size: 12px; line-height: 1.7;
-  color: rgba(255,255,255,0.5); margin-bottom: 12px;
+.login-brand-name { font-size: 17px; font-weight: 800; color: white; letter-spacing: -0.3px; }
+.login-brand-sub  { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+.login-gov-tag {
+  margin-left: auto; display: flex; align-items: center; gap: 6px;
+  font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;
 }
-.gov-footer-badge-row {
-  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;
+
+.login-body {
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; padding: 20px;
 }
-.gov-footer-badge {
-  font-size: 10px; font-weight: 600;
-  background: rgba(255,107,0,0.15);
-  border: 1px solid rgba(255,107,0,0.3);
-  color: #FF9A4A; border-radius: 20px;
-  padding: 3px 10px; letter-spacing: 0.3px;
+
+.login-gov-emblem {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--saffron-xl), var(--indigo-xl));
+  border: 2px solid var(--line2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin-bottom: 16px;
+  box-shadow: var(--shadow);
 }
-.gov-footer-links { list-style: none; padding: 0; margin: 0; }
-.gov-footer-links li { margin-bottom: 9px; }
-.gov-footer-links a {
-  font-size: 12px; color: rgba(255,255,255,0.5);
-  text-decoration: none;
+
+.login-title {
+  font-size: 22px; font-weight: 800; color: var(--ink);
+  letter-spacing: -0.5px; margin-bottom: 4px; text-align: center;
+}
+.login-subtitle {
+  font-size: 13px; color: var(--ink3); margin-bottom: 28px; text-align: center;
+  line-height: 1.5;
+}
+
+.login-card {
+  background: var(--surface); border: 1px solid var(--line2);
+  border-radius: 20px; padding: 32px 28px;
+  width: 100%; max-width: 400px;
+  box-shadow: var(--shadow-lg);
+  position: relative; overflow: hidden;
+}
+.login-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--saffron), var(--indigo));
+}
+
+.login-field-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--ink3); margin-bottom: 6px;
+  display: block;
+}
+
+.login-input-wrap {
+  position: relative; margin-bottom: 20px;
+}
+.login-input {
+  width: 100%; padding: 12px 42px 12px 14px;
+  border: 1.5px solid var(--line2); border-radius: 10px;
+  background: var(--bg); font-family: var(--font);
+  font-size: 14px; color: var(--ink);
+  outline: none; transition: all 0.2s;
+  letter-spacing: 1px;
+}
+.login-input:focus {
+  border-color: var(--saffron);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(255,107,0,0.08);
+}
+.login-input-icon {
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%); font-size: 16px;
+  cursor: pointer; color: var(--ink3);
   transition: color 0.2s;
-  display: flex; align-items: center; gap: 6px;
 }
-.gov-footer-links a:hover { color: #FF9A4A; }
-.gov-footer-links a::before {
-  content: '›'; color: #FF6B00; font-size: 14px; font-weight: 700;
+.login-input-icon:hover { color: var(--ink); }
+
+.login-btn {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, var(--saffron) 0%, var(--indigo) 100%);
+  color: white; border: none; border-radius: 10px;
+  font-family: var(--font); font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(255,107,0,0.3);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.gov-footer-contact-item {
-  display: flex; align-items: flex-start; gap: 10px;
-  margin-bottom: 10px;
+.login-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(255,107,0,0.4); }
+.login-btn:active { transform: translateY(0); }
+.login-btn.loading { opacity: 0.7; pointer-events: none; }
+
+.login-error {
+  display: none; margin-top: 12px;
+  background: var(--crimson-xl); border: 1px solid rgba(224,32,32,0.2);
+  border-radius: 8px; padding: 10px 12px;
+  font-size: 12px; color: var(--crimson); font-weight: 500;
+  text-align: center; animation: shake 0.3s ease;
 }
-.gov-footer-contact-icon {
-  font-size: 14px; flex-shrink: 0; margin-top: 1px;
+@keyframes shake {
+  0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
 }
-.gov-footer-contact-text {
-  font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5;
+.login-error.show { display: block; }
+
+.login-hint {
+  margin-top: 16px; padding: 10px 12px;
+  background: var(--indigo-xl); border-radius: 8px;
+  font-size: 11px; color: var(--ink3); text-align: center; line-height: 1.6;
 }
-.gov-footer-contact-text strong {
-  color: rgba(255,255,255,0.8); display: block; margin-bottom: 1px;
+.login-hint strong { color: var(--indigo); }
+
+.login-footer {
+  margin-top: 20px; font-size: 10px; color: var(--ink4);
+  text-align: center; line-height: 1.6;
 }
-.gov-footer-lang-row {
-  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px;
+
+.login-disclaimer {
+  margin-top: 24px; max-width: 400px; text-align: center;
+  font-size: 10px; color: var(--ink4); line-height: 1.6;
+  padding: 0 10px;
 }
-.gov-footer-lang {
-  font-size: 11px; font-weight: 600;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 20px; padding: 3px 10px;
-  color: rgba(255,255,255,0.6);
-}
-.gov-footer-divider {
-  border: none; border-top: 1px solid rgba(255,255,255,0.07);
-  margin: 0 40px;
-}
-.gov-footer-bottom {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 10px;
-  padding: 14px 40px;
-  max-width: 1440px; margin: 0 auto;
-  font-size: 11px; color: rgba(255,255,255,0.3);
-}
-.gov-footer-bottom-left { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-.gov-footer-bottom a {
-  color: rgba(255,255,255,0.35); text-decoration: none;
-  transition: color 0.2s;
-}
-.gov-footer-bottom a:hover { color: #FF9A4A; }
-.gov-footer-bottom-badge {
-  display: flex; align-items: center; gap: 6px;
-  background: rgba(13,158,107,0.12);
-  border: 1px solid rgba(13,158,107,0.25);
-  border-radius: 20px; padding: 3px 10px;
-  font-size: 10px; color: #12C882; font-weight: 600;
-}
-.gov-footer-bottom-badge span {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: #12C882; animation: govPulse 2s infinite;
-}
-@media (max-width: 900px) {
-  .gov-footer-top { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 560px) {
-  .gov-footer-top { grid-template-columns: 1fr; padding: 24px 20px; }
-  .gov-footer-bottom { padding: 12px 20px; }
-}
+
 </style>
 </head>
 <body>
+
+<!-- ══ LOGIN PAGE ══ -->
+<div class="login-overlay" id="login-overlay" style="display:none;">
+
+  <!-- Top bar matching website -->
+  <div class="login-top-bar">
+    <div class="login-brand-badge">ವ</div>
+    <div>
+      <div class="login-brand-name">VaaNi</div>
+      <div class="login-brand-sub">Karnataka 1092 AI Helpline</div>
+    </div>
+    <div class="login-gov-tag">
+      🇮🇳 GOVERNMENT OF KARNATAKA &nbsp;·&nbsp; DEPT. OF PERSONNEL & ADMINISTRATIVE REFORMS (e-GOVERNANCE)
+    </div>
+  </div>
+
+  <!-- Close Button -->
+  <button onclick="hideLogin()" style="
+    position:absolute; top:70px; right:24px;
+    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+    color:rgba(255,255,255,0.6); width:32px; height:32px; border-radius:50%;
+    font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all 0.2s;
+  " onmouseover="this.style.background='rgba(255,255,255,0.15)'"
+     onmouseout="this.style.background='rgba(255,255,255,0.08)'">✕</button>
+
+  <!-- Login Body -->
+  <div class="login-body">
+
+    <div class="login-gov-emblem">🏛️</div>
+
+    <div class="login-title">Agent Login</div>
+    <div class="login-subtitle">
+      VaaNi · 1092 AI Helpline Dashboard<br>
+      Authorised Personnel Only
+    </div>
+
+    <div class="login-card">
+      <label class="login-field-label">Employee ID / Username</label>
+      <div class="login-input-wrap">
+        <input
+          type="text"
+          class="login-input"
+          id="login-username"
+          placeholder="Enter your Employee ID"
+          autocomplete="username"
+        />
+        <span class="login-input-icon">👤</span>
+      </div>
+
+      <label class="login-field-label">Password</label>
+      <div class="login-input-wrap">
+        <input
+          type="password"
+          class="login-input"
+          id="login-password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') doLogin()"
+        />
+        <span class="login-input-icon" id="pwd-eye" onclick="togglePwd()">👁️</span>
+      </div>
+
+      <button class="login-btn" id="login-btn" onclick="doLogin()">
+        <span id="login-btn-text">🔐 &nbsp; Sign In to Dashboard</span>
+      </button>
+
+      <div class="login-error" id="login-error">
+        ❌ Incorrect username or password. Please try again.
+      </div>
+
+      <div class="login-hint">
+        Default credentials &nbsp;—&nbsp;
+        Username: <strong>agent</strong> &nbsp;|&nbsp;
+        Password: <strong>vaani1092</strong>
+      </div>
+    </div>
+
+    <div class="login-disclaimer">
+      This system is for authorised Karnataka Government personnel only.<br>
+      Unauthorised access is strictly prohibited and will be logged.
+    </div>
+
+  </div>
+</div>
+
 
 <!-- ══ HEADER ══ -->
 <header class="header">
@@ -1269,23 +1386,17 @@ body {
   </div>
 
   <div class="header-right">
-    <div class="header-stat">AI Accuracy <strong id="h-accuracy">—</strong></div>
-    <div class="header-stat">Calls today <strong id="h-calls">1</strong></div>
-    <!-- API Key panel -->
-    <div id="api-panel" style="display:flex;align-items:center;gap:6px">
-
-      <div id="ai-mode-badge" style="
-        padding:4px 10px; border-radius:20px; font-size:10px; font-weight:700;
-        background:var(--amber-xl); color:var(--amber);
-        border:1px solid rgba(217,119,0,0.2); white-space:nowrap;
-        letter-spacing:0.3px;
-      ">🟢 LIVE AI</div>
-    </div>
+    <button onclick="showLogin()" style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:linear-gradient(135deg,var(--saffron),var(--indigo));color:white;border:none;cursor:pointer;font-family:var(--font);font-size:11px;font-weight:700;box-shadow:0 2px 8px rgba(255,107,0,0.3);transition:all 0.2s;white-space:nowrap;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+      🔐 &nbsp;Agent Login
+    </button>
+    <div class="header-stat">AI Accuracy <strong id="h-accuracy">0%</strong></div>
+    <div class="header-stat">Calls today <strong id="h-calls">0</strong></div>
+    <div id="ai-mode-badge" style="padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;background:var(--jade-xl);color:var(--jade);border:1px solid rgba(13,158,107,0.2);white-space:nowrap;letter-spacing:0.3px;">🟢 LIVE AI</div>
   </div>
 </header>
 
 <!-- ══ GOV HERO BANNER ══ -->
-<div class="gov-hero" id="section-dashboard">
+<div class="gov-hero">
   <div class="gov-hero-dots"></div>
   <div class="gov-hero-glow-r"></div>
   <div class="gov-hero-glow-l"></div>
@@ -1295,9 +1406,10 @@ body {
         <span class="gov-badge-dot"></span>
         Government of Karnataka &nbsp;·&nbsp; Dept. of Personnel &amp; Administrative Reforms (e-Governance)
       </div>
-      <div class="gov-title">VaaNi</div>
-      <div class="gov-subtitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%">
-        An AI System for Accurate Understanding, Verification, and Response in Multilingual Citizen Helpline Interactions
+      <div class="gov-title">VaaNi <span class="gov-title-accent">AI</span></div>
+      <div class="gov-subtitle">
+        Accurate Understanding Before Response —<br>
+        Voice-to-Voice AI Interpreter for the 1092 Citizen Helpline
       </div>
       <div class="gov-pills">
         <div class="gov-pill">🗣️ Multilingual</div>
@@ -1332,6 +1444,8 @@ body {
         <span class="gov-lang-item" style="color:#7B8FF7">हिंदी</span>
         <span class="gov-lang-sep">·</span>
         <span class="gov-lang-item" style="color:#12C882">English</span>
+        <span class="gov-lang-sep">·</span>
+        <span class="gov-lang-item" style="color:#FFAD33">తెలుగు</span>
       </div>
     </div>
   </div>
@@ -1360,7 +1474,7 @@ body {
 </div>
 
 <!-- ══ DEMO STRIP ══ -->
-<div class="demo-strip" id="section-simulation">
+<div class="demo-strip">
   <div class="demo-strip-lbl">
     <span class="demo-strip-pulse"></span>
     Live Demo Scenarios
@@ -1396,7 +1510,7 @@ body {
   <div class="main-col">
 
     <!-- Citizen Voice Card -->
-    <div class="card" id="section-voice">
+    <div class="card">
       <div class="card-title">
         <div class="card-title-dot" style="background:var(--saffron)"></div>
         Citizen Voice Input
@@ -1469,7 +1583,7 @@ body {
     </div>
 
     <!-- AI Interpretation Card -->
-    <div class="card interp-card" id="section-ai-insights">
+    <div class="card interp-card">
       <div class="card-title">
         <div class="card-title-dot" style="background:var(--indigo)"></div>
         AI Interpretation
@@ -1582,7 +1696,7 @@ body {
 
       <!-- Transcript Card -->
       <div class="card">
-        <div class="card-title" id="section-call-logs">
+        <div class="card-title">
           <div class="card-title-dot" style="background:var(--jade)"></div>
           Live Transcript
         </div>
@@ -2467,136 +2581,83 @@ document.addEventListener('keydown', (e) => {
   if (n >= 1 && n <= 5) runScenario(n - 1);
 });
 
-// ══ LIVE KPI SYNC — updates Calls Today, AI Accuracy, Verified, Escalated ══
-async function syncInsights() {
-  try {
-    const r = await fetch('/stats');
-    if (!r.ok) return;
-    const d = await r.json();
-    const setEl = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
-    setEl('ins-total',     d.total_calls    || 0);
-    setEl('ins-accuracy',  d.accuracy_rate > 0 ? d.accuracy_rate + '%' : '—');
-    setEl('ins-confirmed', d.confirmed      || 0);
-    setEl('ins-escalated', d.escalated      || 0);
-    // also update header accuracy badge
-    const ha = document.getElementById('h-accuracy');
-    if (ha) ha.textContent = (d.accuracy_rate || 0) + '%';
-    const hc = document.getElementById('h-calls');
-    if (hc) hc.textContent = d.total_calls || 0;
-  } catch(e) { console.warn('Stats sync failed:', e); }
-}
-// Run on load and every 5 seconds
-syncInsights();
-setInterval(syncInsights, 5000);
+// ══ LOGIN SYSTEM ══════════════════════════════
+const VALID_USERS = {
+  'agent':   'vaani1092',
+  'admin':   'vaani@admin123',
+  'prashant': 'vaani1092',
+  'user':    'vaani1092',
+};
 
-// ── Smooth scroll for footer links ──
-function smoothTo(id) {
-  event.preventDefault();
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+function doLogin() {
+  const username = document.getElementById('login-username').value.trim().toLowerCase();
+  const password = document.getElementById('login-password').value;
+  const errEl    = document.getElementById('login-error');
+  const btn      = document.getElementById('login-btn');
+  const btnText  = document.getElementById('login-btn-text');
 
-// ── Footer system status live check ──
-async function checkFooterStatus() {
-  try {
-    const r = await fetch('/health');
-    const d = await r.json();
-    const dot = document.getElementById('footer-status-dot');
-    if (dot) {
-      dot.style.background = d.status === 'ok' ? '#12C882' : '#FF5252';
-      dot.title = d.status === 'ok' ? 'System Online' : 'System Issue';
+  errEl.classList.remove('show');
+
+  if (!username || !password) {
+    errEl.textContent = '❌ Please enter both username and password.';
+    errEl.classList.add('show');
+    return;
+  }
+
+  // Show loading
+  btn.classList.add('loading');
+  btnText.textContent = '⏳  Verifying...';
+
+  setTimeout(() => {
+    if (VALID_USERS[username] && VALID_USERS[username] === password) {
+      // Success — hide login overlay
+      hideLogin();
+      // Show welcome toast
+      toast('👋 Welcome, ' + username.toUpperCase() + '! Dashboard ready.', '');
+    } else {
+      btn.classList.remove('loading');
+      btnText.textContent = '🔐   Sign In to Dashboard';
+      errEl.textContent = '❌ Incorrect username or password. Please try again.';
+      errEl.classList.add('show');
+      // Shake the card
+      document.querySelector('.login-card').style.animation = 'none';
+      setTimeout(() => {
+        document.querySelector('.login-card').style.animation = '';
+      }, 10);
     }
-  } catch(e) {
-    const dot = document.getElementById('footer-status-dot');
-    if (dot) dot.style.background = '#FF5252';
+  }, 800);
+}
+
+function togglePwd() {
+  const inp = document.getElementById('login-password');
+  const eye = document.getElementById('pwd-eye');
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    eye.textContent = '🙈';
+  } else {
+    inp.type = 'password';
+    eye.textContent = '👁️';
   }
 }
-checkFooterStatus();
-setInterval(checkFooterStatus, 30000);
-</script>
+// ══ END LOGIN SYSTEM ══════════════════════════
 
-<!-- ══ GOVERNMENT FOOTER ══ -->
-<footer class="gov-footer">
-  <div class="gov-footer-top">
-    <div class="gov-footer-about">
-      <div class="gov-footer-col-title">VaaNi — 1092 AI Helpline</div>
-      <p>An AI-assisted voice-to-voice system for Karnataka's 1092 citizen helpline. Ensures accurate understanding across languages, dialects, and emotional contexts before enabling agent response.</p>
-      <div class="gov-footer-badge-row">
-        <span class="gov-footer-badge">🗣️ Multilingual</span>
-        <span class="gov-footer-badge">🧭 Dialect-Aware</span>
-        <span class="gov-footer-badge">💛 Emotion-Sensitive</span>
-        <span class="gov-footer-badge">🛡️ Human Takeover</span>
-      </div>
-      <div class="gov-footer-lang-row" style="margin-top:14px">
-        <span class="gov-footer-lang" style="color:#FF9A4A">ಕನ್ನಡ</span>
-        <span class="gov-footer-lang" style="color:#7B8FF7">हिंदी</span>
-        <span class="gov-footer-lang" style="color:#12C882">English</span>
-      </div>
-    </div>
-    <div>
-      <div class="gov-footer-col-title">Quick Links</div>
-      <ul class="gov-footer-links">
-        <li><a href="#section-dashboard" onclick="smoothTo('section-dashboard')">Dashboard</a></li>
-        <li><a href="#section-simulation" onclick="smoothTo('section-simulation')">Live Call Simulation</a></li>
-        <li><a href="/admin">Admin Panel</a></li>
-        <li><a href="#section-call-logs" onclick="smoothTo('section-call-logs')">Call Logs</a></li>
-        <li><a href="#section-ai-insights" onclick="smoothTo('section-ai-insights')">AI Insights</a></li>
-        <li><span style="font-size:12px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:6px;cursor:default">&#8250; System Status <span id="footer-status-dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#12C882;margin-left:2px;vertical-align:middle" title="System Online"></span></span></li>
-      </ul>
-    </div>
-    <div>
-      <div class="gov-footer-col-title">Government</div>
-      <ul class="gov-footer-links">
-        <li><a href="https://www.karnataka.gov.in" target="_blank">Government of Karnataka</a></li>
-        <li><a href="https://dpar.karnataka.gov.in" target="_blank">DPAR (e-Governance)</a></li>
-        <li><a href="https://india.gov.in" target="_blank">India.gov.in</a></li>
-        <li><a href="https://digitalindia.gov.in" target="_blank">Digital India</a></li>
-        <li><a href="https://services.india.gov.in" target="_blank">National Services Portal</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="gov-footer-col-title">Contact &amp; Support</div>
-      <div class="gov-footer-contact-item">
-        <span class="gov-footer-contact-icon">📍</span>
-        <div class="gov-footer-contact-text"><strong>Address</strong>DPAR (e-Governance), M.S. Building, Dr. B.R. Ambedkar Veedhi, Bengaluru – 560 001, Karnataka</div>
-      </div>
-      <div class="gov-footer-contact-item">
-        <span class="gov-footer-contact-icon">📞</span>
-        <div class="gov-footer-contact-text"><strong>Helpline</strong>1092 (Toll Free)</div>
-      </div>
-      <div class="gov-footer-contact-item">
-        <span class="gov-footer-contact-icon">✉️</span>
-        <div class="gov-footer-contact-text"><strong>Email</strong>helpdesk@karnataka.gov.in</div>
-      </div>
-      <div class="gov-footer-contact-item">
-        <span class="gov-footer-contact-icon">🌐</span>
-        <div class="gov-footer-contact-text"><strong>Portal</strong>karnataka.gov.in</div>
-      </div>
-    </div>
-  </div>
-  <hr class="gov-footer-divider">
-  <!-- Disclaimer bar -->
-  <div style="background:rgba(255,107,0,0.08);border-top:1px solid rgba(255,107,0,0.2);padding:10px 40px;text-align:center">
-    <p style="font-size:11px;color:rgba(255,200,100,0.85);margin:0;line-height:1.6">
-      ⚠️ <strong>Disclaimer:</strong> This is a prototype demo and not an official government system. &nbsp;·&nbsp;
-      AI-powered prototype demonstrating multilingual voice understanding and verification for citizen services.
-    </p>
-  </div>
-  <div class="gov-footer-bottom">
-    <div class="gov-footer-bottom-left">
-      <span>Prototype for AI for Bharat Hackathon</span>
-      <span>·</span><a href="#">Privacy Policy</a>
-      <span>·</span><a href="#">Terms of Use</a>
-      <span>·</span><a href="#">Accessibility</a>
-      <span>·</span><span>Prototype built for AI for Bharat Hackathon</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <div class="gov-footer-bottom-badge"><span></span> System Online</div>
-      <span style="color:rgba(255,255,255,0.2)">|</span>
-      <span>Powered by VaaNi AI v2.0</span>
-    </div>
-  </div>
-</footer>
+
+// ── LOGIN TOGGLE ──────────────────────────────
+function showLogin() {
+  document.getElementById('login-overlay').style.display = 'flex';
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-error').classList.remove('show');
+  document.getElementById('login-btn-text').textContent = '🔐   Sign In to Dashboard';
+  document.getElementById('login-btn').classList.remove('loading');
+}
+
+function hideLogin() {
+  document.getElementById('login-overlay').style.display = 'none';
+}
+// ─────────────────────────────────────────────
+
+</script>
 </body>
 </html>
 """
