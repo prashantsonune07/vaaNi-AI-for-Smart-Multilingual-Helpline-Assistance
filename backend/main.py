@@ -1072,7 +1072,8 @@ body {
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .gov-subtitle {
-  font-size:13px;color:rgba(255,255,255,.5);line-height:1.65;margin-bottom:14px;max-width:480px;
+  font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;margin-bottom:14px;
+  white-space:nowrap;
 }
 .gov-pills { display:flex;gap:7px;flex-wrap:wrap; }
 .gov-pill {
@@ -1487,7 +1488,7 @@ body {
         Government of Karnataka &nbsp;·&nbsp; Dept. of Personnel &amp; Administrative Reforms (e-Governance)
       </div>
       <div class="gov-title">VaaNi</div>
-      <div class="gov-subtitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">An AI System for Accurate Understanding, Verification, and Response in Multilingual Citizen Helpline Interactions</div>
+      <div class="gov-subtitle">An AI System for Accurate Understanding, Verification, and Response in Multilingual Citizen Helpline Interactions</div>
       <div class="gov-pills">
         <div class="gov-pill">🗣️ Multilingual</div>
         <div class="gov-pill">🧭 Dialect-Aware</div>
