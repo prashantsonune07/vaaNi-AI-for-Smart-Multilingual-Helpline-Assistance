@@ -71,7 +71,7 @@ init_db()
 
 # ── AI CONFIG ─────────────────────────────────
 # ── ADMIN CONFIG ──────────────────────────────
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")  # Set this in Render Environment Variables
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "vaani@admin123")
 
 OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY", "")  # Set this in Render Environment Variables
 OPENROUTER_API = "https://openrouter.ai/api/v1/chat/completions"

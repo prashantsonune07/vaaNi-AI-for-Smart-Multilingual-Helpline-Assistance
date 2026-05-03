@@ -1004,9 +1004,235 @@ body {
   flex-shrink:0;animation:govPulse 2s infinite;
 }
 
+
+/* ══ LOGIN PAGE ══ */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-family: var(--font);
+}
+
+.login-top-bar {
+  position: absolute; top: 0; left: 0; right: 0;
+  background: linear-gradient(135deg, #1A0A00 0%, #0A1040 100%);
+  border-bottom: 3px solid var(--saffron);
+  padding: 0 28px; height: 56px;
+  display: flex; align-items: center; gap: 12px;
+}
+.login-brand-badge {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--saffron), var(--saffron-l));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-kn); font-size: 18px; font-weight: 700; color: white;
+  box-shadow: 0 4px 12px rgba(255,107,0,0.4);
+}
+.login-brand-name { font-size: 17px; font-weight: 800; color: white; letter-spacing: -0.3px; }
+.login-brand-sub  { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+.login-gov-tag {
+  margin-left: auto; display: flex; align-items: center; gap: 6px;
+  font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;
+}
+
+.login-body {
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; padding: 20px;
+}
+
+.login-gov-emblem {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--saffron-xl), var(--indigo-xl));
+  border: 2px solid var(--line2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.login-title {
+  font-size: 22px; font-weight: 800; color: var(--ink);
+  letter-spacing: -0.5px; margin-bottom: 4px; text-align: center;
+}
+.login-subtitle {
+  font-size: 13px; color: var(--ink3); margin-bottom: 28px; text-align: center;
+  line-height: 1.5;
+}
+
+.login-card {
+  background: var(--surface); border: 1px solid var(--line2);
+  border-radius: 20px; padding: 32px 28px;
+  width: 100%; max-width: 400px;
+  box-shadow: var(--shadow-lg);
+  position: relative; overflow: hidden;
+}
+.login-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--saffron), var(--indigo));
+}
+
+.login-field-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--ink3); margin-bottom: 6px;
+  display: block;
+}
+
+.login-input-wrap {
+  position: relative; margin-bottom: 20px;
+}
+.login-input {
+  width: 100%; padding: 12px 42px 12px 14px;
+  border: 1.5px solid var(--line2); border-radius: 10px;
+  background: var(--bg); font-family: var(--font);
+  font-size: 14px; color: var(--ink);
+  outline: none; transition: all 0.2s;
+  letter-spacing: 1px;
+}
+.login-input:focus {
+  border-color: var(--saffron);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(255,107,0,0.08);
+}
+.login-input-icon {
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%); font-size: 16px;
+  cursor: pointer; color: var(--ink3);
+  transition: color 0.2s;
+}
+.login-input-icon:hover { color: var(--ink); }
+
+.login-btn {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, var(--saffron) 0%, var(--indigo) 100%);
+  color: white; border: none; border-radius: 10px;
+  font-family: var(--font); font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(255,107,0,0.3);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.login-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(255,107,0,0.4); }
+.login-btn:active { transform: translateY(0); }
+.login-btn.loading { opacity: 0.7; pointer-events: none; }
+
+.login-error {
+  display: none; margin-top: 12px;
+  background: var(--crimson-xl); border: 1px solid rgba(224,32,32,0.2);
+  border-radius: 8px; padding: 10px 12px;
+  font-size: 12px; color: var(--crimson); font-weight: 500;
+  text-align: center; animation: shake 0.3s ease;
+}
+@keyframes shake {
+  0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+}
+.login-error.show { display: block; }
+
+.login-hint {
+  margin-top: 16px; padding: 10px 12px;
+  background: var(--indigo-xl); border-radius: 8px;
+  font-size: 11px; color: var(--ink3); text-align: center; line-height: 1.6;
+}
+.login-hint strong { color: var(--indigo); }
+
+.login-footer {
+  margin-top: 20px; font-size: 10px; color: var(--ink4);
+  text-align: center; line-height: 1.6;
+}
+
+.login-disclaimer {
+  margin-top: 24px; max-width: 400px; text-align: center;
+  font-size: 10px; color: var(--ink4); line-height: 1.6;
+  padding: 0 10px;
+}
+
 </style>
 </head>
 <body>
+
+<!-- ══ LOGIN PAGE ══ -->
+<div class="login-overlay" id="login-overlay" style="display:none;">
+
+  <!-- Top bar matching website -->
+  <div class="login-top-bar">
+    <div class="login-brand-badge">ವ</div>
+    <div>
+      <div class="login-brand-name">VaaNi</div>
+      <div class="login-brand-sub">Karnataka 1092 AI Helpline</div>
+    </div>
+    <div class="login-gov-tag">
+      🇮🇳 GOVERNMENT OF KARNATAKA &nbsp;·&nbsp; DEPT. OF PERSONNEL & ADMINISTRATIVE REFORMS (e-GOVERNANCE)
+    </div>
+  </div>
+
+  <!-- Close Button -->
+  <button onclick="hideLogin()" style="
+    position:absolute; top:70px; right:24px;
+    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+    color:rgba(255,255,255,0.6); width:32px; height:32px; border-radius:50%;
+    font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all 0.2s;
+  " onmouseover="this.style.background='rgba(255,255,255,0.15)'"
+     onmouseout="this.style.background='rgba(255,255,255,0.08)'">✕</button>
+
+  <!-- Login Body -->
+  <div class="login-body">
+
+    <div class="login-gov-emblem">🏛️</div>
+
+    <div class="login-title">Agent Login</div>
+    <div class="login-subtitle">
+      VaaNi · 1092 AI Helpline Dashboard<br>
+      Authorised Personnel Only
+    </div>
+
+    <div class="login-card">
+      <label class="login-field-label">Employee ID / Username</label>
+      <div class="login-input-wrap">
+        <input
+          type="text"
+          class="login-input"
+          id="login-username"
+          placeholder="Enter your Employee ID"
+          autocomplete="username"
+        />
+        <span class="login-input-icon">👤</span>
+      </div>
+
+      <label class="login-field-label">Password</label>
+      <div class="login-input-wrap">
+        <input
+          type="password"
+          class="login-input"
+          id="login-password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') doLogin()"
+        />
+        <span class="login-input-icon" id="pwd-eye" onclick="togglePwd()">👁️</span>
+      </div>
+
+      <button class="login-btn" id="login-btn" onclick="doLogin()">
+        <span id="login-btn-text">🔐 &nbsp; Sign In to Dashboard</span>
+      </button>
+
+      <div class="login-error" id="login-error">
+        ❌ Incorrect username or password. Please try again.
+      </div>
+
+      <div class="login-hint">
+        Default credentials &nbsp;—&nbsp;
+        Username: <strong>agent</strong> &nbsp;|&nbsp;
+        Password: <strong>vaani1092</strong>
+      </div>
+    </div>
+
+    <div class="login-disclaimer">
+      This system is for authorised Karnataka Government personnel only.<br>
+      Unauthorised access is strictly prohibited and will be logged.
+    </div>
+
+  </div>
+</div>
+
 
 <!-- ══ HEADER ══ -->
 <header class="header">
@@ -1026,18 +1252,12 @@ body {
   </div>
 
   <div class="header-right">
-    <div class="header-stat">AI Accuracy <strong id="h-accuracy">—</strong></div>
-    <div class="header-stat">Calls today <strong id="h-calls">1</strong></div>
-    <!-- API Key panel -->
-    <div id="api-panel" style="display:flex;align-items:center;gap:6px">
-
-      <div id="ai-mode-badge" style="
-        padding:4px 10px; border-radius:20px; font-size:10px; font-weight:700;
-        background:var(--amber-xl); color:var(--amber);
-        border:1px solid rgba(217,119,0,0.2); white-space:nowrap;
-        letter-spacing:0.3px;
-      ">🟢 LIVE AI</div>
-    </div>
+    <button onclick="showLogin()" style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:linear-gradient(135deg,var(--saffron),var(--indigo));color:white;border:none;cursor:pointer;font-family:var(--font);font-size:11px;font-weight:700;box-shadow:0 2px 8px rgba(255,107,0,0.3);transition:all 0.2s;white-space:nowrap;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+      🔐 &nbsp;Agent Login
+    </button>
+    <div class="header-stat">AI Accuracy <strong id="h-accuracy">0%</strong></div>
+    <div class="header-stat">Calls today <strong id="h-calls">0</strong></div>
+    <div id="ai-mode-badge" style="padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;background:var(--jade-xl);color:var(--jade);border:1px solid rgba(13,158,107,0.2);white-space:nowrap;letter-spacing:0.3px;">🟢 LIVE AI</div>
   </div>
 </header>
 
@@ -2226,6 +2446,83 @@ document.addEventListener('keydown', (e) => {
   const n = parseInt(e.key);
   if (n >= 1 && n <= 5) runScenario(n - 1);
 });
+
+// ══ LOGIN SYSTEM ══════════════════════════════
+const VALID_USERS = {
+  'agent':   'vaani1092',
+  'admin':   'vaani@admin123',
+  'prashant': 'vaani1092',
+  'user':    'vaani1092',
+};
+
+function doLogin() {
+  const username = document.getElementById('login-username').value.trim().toLowerCase();
+  const password = document.getElementById('login-password').value;
+  const errEl    = document.getElementById('login-error');
+  const btn      = document.getElementById('login-btn');
+  const btnText  = document.getElementById('login-btn-text');
+
+  errEl.classList.remove('show');
+
+  if (!username || !password) {
+    errEl.textContent = '❌ Please enter both username and password.';
+    errEl.classList.add('show');
+    return;
+  }
+
+  // Show loading
+  btn.classList.add('loading');
+  btnText.textContent = '⏳  Verifying...';
+
+  setTimeout(() => {
+    if (VALID_USERS[username] && VALID_USERS[username] === password) {
+      // Success — hide login overlay
+      hideLogin();
+      // Show welcome toast
+      toast('👋 Welcome, ' + username.toUpperCase() + '! Dashboard ready.', '');
+    } else {
+      btn.classList.remove('loading');
+      btnText.textContent = '🔐   Sign In to Dashboard';
+      errEl.textContent = '❌ Incorrect username or password. Please try again.';
+      errEl.classList.add('show');
+      // Shake the card
+      document.querySelector('.login-card').style.animation = 'none';
+      setTimeout(() => {
+        document.querySelector('.login-card').style.animation = '';
+      }, 10);
+    }
+  }, 800);
+}
+
+function togglePwd() {
+  const inp = document.getElementById('login-password');
+  const eye = document.getElementById('pwd-eye');
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    eye.textContent = '🙈';
+  } else {
+    inp.type = 'password';
+    eye.textContent = '👁️';
+  }
+}
+// ══ END LOGIN SYSTEM ══════════════════════════
+
+
+// ── LOGIN TOGGLE ──────────────────────────────
+function showLogin() {
+  document.getElementById('login-overlay').style.display = 'flex';
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-error').classList.remove('show');
+  document.getElementById('login-btn-text').textContent = '🔐   Sign In to Dashboard';
+  document.getElementById('login-btn').classList.remove('loading');
+}
+
+function hideLogin() {
+  document.getElementById('login-overlay').style.display = 'none';
+}
+// ─────────────────────────────────────────────
+
 </script>
 </body>
 </html>
