@@ -1486,11 +1486,8 @@ body {
         <span class="gov-badge-dot"></span>
         Government of Karnataka &nbsp;·&nbsp; Dept. of Personnel &amp; Administrative Reforms (e-Governance)
       </div>
-      <div class="gov-title">VaaNi <span class="gov-title-accent">AI</span></div>
-      <div class="gov-subtitle">
-        Accurate Understanding Before Response —<br>
-        Voice-to-Voice AI Interpreter for the 1092 Citizen Helpline
-      </div>
+      <div class="gov-title">VaaNi</div>
+      <div class="gov-subtitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">An AI System for Accurate Understanding, Verification, and Response in Multilingual Citizen Helpline Interactions</div>
       <div class="gov-pills">
         <div class="gov-pill">🗣️ Multilingual</div>
         <div class="gov-pill">🧭 Dialect-Aware</div>
@@ -1524,8 +1521,6 @@ body {
         <span class="gov-lang-item" style="color:#7B8FF7">हिंदी</span>
         <span class="gov-lang-sep">·</span>
         <span class="gov-lang-item" style="color:#12C882">English</span>
-        <span class="gov-lang-sep">·</span>
-        <span class="gov-lang-item" style="color:#FFAD33">తెలుగు</span>
       </div>
     </div>
   </div>
@@ -2736,6 +2731,21 @@ function hideLogin() {
   document.getElementById('login-overlay').style.display = 'none';
 }
 // ─────────────────────────────────────────────
+// ══ LIVE STATS SYNC (updates hero KPIs every 5 seconds) ══
+async function syncInsights() {
+  try {
+    const r = await fetch('/stats');
+    if (!r.ok) return;
+    const d = await r.json();
+    const setEl = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+    setEl('ins-total',     d.total_calls    || 0);
+    setEl('ins-accuracy',  d.accuracy_rate > 0 ? d.accuracy_rate + '%' : '—');
+    setEl('ins-confirmed', d.confirmed      || 0);
+    setEl('ins-escalated', d.escalated      || 0);
+  } catch(e) { /* silent fail */ }
+}
+syncInsights();
+setInterval(syncInsights, 5000);
 
 </script>
 
