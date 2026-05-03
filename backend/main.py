@@ -2541,7 +2541,7 @@ setInterval(checkFooterStatus, 30000);
         <li><a href="/admin">Admin Panel</a></li>
         <li><a href="#section-call-logs" onclick="smoothTo('section-call-logs')">Call Logs</a></li>
         <li><a href="#section-ai-insights" onclick="smoothTo('section-ai-insights')">AI Insights</a></li>
-        <li><a href="/health" target="_blank" id="footer-health-link">System Status <span id="footer-status-dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#12C882;margin-left:4px;vertical-align:middle"></span></a></li>
+        <li><span style="font-size:12px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:6px;cursor:default">&#8250; System Status <span id="footer-status-dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#12C882;margin-left:2px;vertical-align:middle" title="System Online"></span></span></li>
       </ul>
     </div>
     <div>
