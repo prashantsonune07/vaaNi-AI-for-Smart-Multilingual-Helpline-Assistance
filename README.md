@@ -1,5 +1,5 @@
 # VaaNi — AI Voice System for 1092 Helpline
-### Karnataka Government · AI for Bharat Hackathon 2026
+### Prototype for Karnataka 1092 Helpline (AI for Bharat Hackathon)
 
 > **"Understanding comes before action"**
 > VaaNi ensures citizens are correctly understood before any response is given.
