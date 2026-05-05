@@ -2442,9 +2442,23 @@ async function runScenario(idx) {
   document.getElementById('citizen-bubble').innerHTML='<span class="placeholder">Listening...</span>';
 
   // Start call setup — always reset and start fresh for each scenario
+  // Generate new session ID for each scenario
+  STATE.sessionId = 'CALL-' + Math.floor(100000+Math.random()*900000) + '-' + Math.floor(1000+Math.random()*9000);
   startTimer();
   document.getElementById('session-id-display').textContent=STATE.sessionId;
   document.getElementById('h-calls').textContent='1';
+
+  // Register session in database so stats update
+  try {
+    await fetch('/session/create', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({session_id: STATE.sessionId, language: sc.lang||'Kannada'})
+    });
+    syncInsights();
+    setTimeout(syncInsights, 2000);
+    setTimeout(syncInsights, 4000);
+  } catch(e) {}
 
   // Update status
   document.getElementById('status-emoji').textContent='📞';
@@ -2570,6 +2584,17 @@ async function runScenario(idx) {
 // ── VERIFICATION ACTIONS ───────────────────────────────
 function citizenConfirmed() {
   STATE.confirmed++;
+  // Save to database
+  fetch('/feedback', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      session_id: STATE.sessionId,
+      type: 'confirm',
+      original: STATE.lastResult?.interpreted_issue || '',
+      language: STATE.lastResult?.language || 'Kannada'
+    })
+  }).then(()=>setTimeout(syncInsights, 500)).catch(()=>{});
   const issue = STATE.lastResult?.interpreted_issue||'Issue confirmed';
   addLog('ok', issue.slice(0,55)+'...');
   addTranscript('citizen','✅ ಹೌದು / हाँ / Yes — confirmed!');
@@ -2584,6 +2609,17 @@ function citizenConfirmed() {
 
 function citizenCorrected() {
   STATE.corrections++;
+  // Save to database
+  fetch('/feedback', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      session_id: STATE.sessionId,
+      type: 'correct',
+      original: STATE.lastResult?.interpreted_issue || '',
+      language: STATE.lastResult?.language || 'Kannada'
+    })
+  }).then(()=>setTimeout(syncInsights, 500)).catch(()=>{});
   addLog('fix','Misunderstanding — citizen corrected AI');
   addTranscript('citizen','❌ ಇಲ್ಲ / नहीं / No — correction needed');
   document.getElementById('verif-block').className='verif-block';
@@ -2597,6 +2633,17 @@ function citizenCorrected() {
 }
 
 function triggerEscalation() {
+  // Mark session as escalated in database
+  fetch('/feedback', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      session_id: STATE.sessionId,
+      type: 'escalate',
+      original: STATE.lastResult?.interpreted_issue || '',
+      language: STATE.lastResult?.language || 'Kannada'
+    })
+  }).then(()=>setTimeout(syncInsights, 500)).catch(()=>{});
   showEscalation('Agent manually escalated this call');
 }
 
@@ -2741,21 +2788,29 @@ function hideLogin() {
   document.getElementById('login-overlay').style.display = 'none';
 }
 // ─────────────────────────────────────────────
-// ══ LIVE STATS SYNC (updates hero KPIs every 5 seconds) ══
+// ══ LIVE STATS SYNC (updates all KPIs every 3 seconds) ══
 async function syncInsights() {
   try {
     const r = await fetch('/stats');
     if (!r.ok) return;
     const d = await r.json();
     const setEl = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
-    setEl('ins-total',     d.total_calls    || 0);
-    setEl('ins-accuracy',  d.accuracy_rate > 0 ? d.accuracy_rate + '%' : '—');
-    setEl('ins-confirmed', d.confirmed      || 0);
-    setEl('ins-escalated', d.escalated      || 0);
+    const total     = d.total_calls    || 0;
+    const accuracy  = d.accuracy_rate > 0 ? d.accuracy_rate + '%' : '—';
+    const confirmed = d.confirmed      || 0;
+    const escalated = d.escalated      || 0;
+    // Hero KPI boxes
+    setEl('ins-total',     total);
+    setEl('ins-accuracy',  accuracy);
+    setEl('ins-confirmed', confirmed);
+    setEl('ins-escalated', escalated);
+    // Header stats (keep in sync)
+    setEl('h-calls',    total);
+    setEl('h-accuracy', accuracy);
   } catch(e) { /* silent fail */ }
 }
 syncInsights();
-setInterval(syncInsights, 5000);
+setInterval(syncInsights, 3000);
 
 </script>
 
@@ -2861,8 +2916,10 @@ async def serve_frontend():
     return HTMLResponse(content=FRONTEND_HTML)
 
 @app.post("/session/create")
-async def create_session(language: str = "kannada"):
-    sid = f"CALL-{datetime.now().strftime('%H%M%S')}-{random.randint(1000,9999)}"
+async def create_session(request: Request):
+    body = await request.json()
+    sid = body.get("session_id") or f"CALL-{datetime.now().strftime('%H%M%S')}-{random.randint(1000,9999)}"
+    language = body.get("language", "Kannada")
     now = datetime.now().isoformat()
     sessions[sid] = {"session_id": sid, "language": language, "transcript": [],
                      "escalated": False, "verified_count": 0, "correction_count": 0,
@@ -2916,6 +2973,11 @@ async def record_feedback(request: Request):
         db.execute("UPDATE sessions SET correction_count=? WHERE id=?", (session["correction_count"], session_id))
         db.execute("INSERT INTO learning_log (session_id, type, original, corrected, language, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
                    (session_id, "correct", original, corrected, language, datetime.now().isoformat()))
+    elif feedback_type == "escalate":
+        session["escalated"] = True
+        db.execute("UPDATE sessions SET escalated=1 WHERE id=?", (session_id,))
+        db.execute("INSERT INTO learning_log (session_id, type, original, language, timestamp) VALUES (?, ?, ?, ?, ?)",
+                   (session_id, "escalate", original, language, datetime.now().isoformat()))
     db.commit(); db.close()
     return {"status": "recorded"}
 
