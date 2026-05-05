@@ -2615,10 +2615,26 @@ async function runScenario(idx) {
         <div class="verif-label">AI Asks the Citizen</div>
       </div>
       <div class="verif-q" id="verif-q"></div>
-      <div class="verif-btns">
+      <div class="verif-btns" id="verif-btns-main">
         <button class="vbtn vbtn-yes" onclick="citizenConfirmed()">✅ Citizen Says Yes</button>
         <button class="vbtn vbtn-no" onclick="citizenCorrected()">❌ Needs Correction</button>
         <button class="vbtn vbtn-escalate" onclick="triggerEscalation()">⬆️ Escalate</button>
+      </div>
+      <div class="correction-box" id="correction-box">
+        <div class="correction-box-title">✏️ What did AI misunderstand?</div>
+        <div class="correction-issue-grid">
+          <button class="correction-issue-btn" onclick="selectCorrectionIssue(this,'Ration Card Issue')">🏷️ Ration Card</button>
+          <button class="correction-issue-btn" onclick="selectCorrectionIssue(this,'Pension Issue')">👴 Pension</button>
+          <button class="correction-issue-btn" onclick="selectCorrectionIssue(this,'Water Supply Issue')">💧 Water Supply</button>
+          <button class="correction-issue-btn" onclick="selectCorrectionIssue(this,'Emergency')">🚑 Emergency</button>
+          <button class="correction-issue-btn" onclick="selectCorrectionIssue(this,'Land Records')">📜 Land Records</button>
+          <button class="correction-issue-btn" onclick="selectCorrectionIssue(this,'Other Issue')">📋 Other</button>
+        </div>
+        <textarea class="correction-text-area" id="correction-text" rows="2"
+          placeholder="Or type the correct issue in your own words..."></textarea>
+        <button class="correction-submit-btn" id="correction-submit-btn" onclick="submitCorrection()">
+          🔁 Re-run AI with Correction
+        </button>
       </div>
     </div>`;
 
