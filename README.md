@@ -22,13 +22,11 @@ VaaNi (ವಾಣಿ) is a real-time AI voice-to-voice assistant for Karnataka's 
 
 ## Quick Start
 
+Open the deployed application:
 ```bash
-git clone https://github.com/YOUR_USERNAME/vaani.git
-cd vaani/backend
-pip install -r requirements.txt
-python main.py
+https://vaani-ai-for-smart-multilingual-helpline.onrender.com/
 ```
-Open `frontend/index.html` in your browser.
+Open `https://vaani-ai-for-smart-multilingual-helpline.onrender.com/` in your browser.
 
 ## Project Structure
 
