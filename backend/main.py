@@ -1374,7 +1374,7 @@ body {
       <div class="login-brand-sub">Karnataka 1092 AI Helpline</div>
     </div>
     <div class="login-gov-tag">
-      🇮🇳 GOVERNMENT OF KARNATAKA &nbsp;·&nbsp; DEPT. OF PERSONNEL & ADMINISTRATIVE REFORMS (e-GOVERNANCE)
+      🏆 PROTOTYPE FOR KARNATAKA 1092 HELPLINE &nbsp;·&nbsp; AI FOR BHARAT HACKATHON
     </div>
   </div>
 
@@ -1485,7 +1485,7 @@ body {
     <div class="gov-hero-left">
       <div class="gov-badge">
         <span class="gov-badge-dot"></span>
-        Government of Karnataka &nbsp;·&nbsp; Dept. of Personnel &amp; Administrative Reforms (e-Governance)
+        Prototype for Karnataka 1092 Helpline (AI for Bharat Hackathon)
       </div>
       <div class="gov-title">VaaNi</div>
       <div class="gov-subtitle">An AI System for Accurate Understanding, Verification, and Response in Multilingual Citizen Helpline Interactions</div>
@@ -2055,10 +2055,21 @@ function updateStats() {
   document.getElementById('cm-verified').textContent=c;
 }
 
+function resetTimer() {
+  // Stop existing timer
+  if(STATE.timerInterval) {
+    clearInterval(STATE.timerInterval);
+    STATE.timerInterval = null;
+  }
+  STATE.timerStart = null;
+  document.getElementById('timer-display').textContent = '00:00';
+}
+
 function startTimer() {
-  if(STATE.timerInterval) return;
-  STATE.timerStart=Date.now();
-  STATE.timerInterval=setInterval(()=>{
+  // Always reset before starting fresh
+  resetTimer();
+  STATE.timerStart = Date.now();
+  STATE.timerInterval = setInterval(()=>{
     const e=Math.floor((Date.now()-STATE.timerStart)/1000);
     const m=String(Math.floor(e/60)).padStart(2,'0');
     const s=String(e%60).padStart(2,'0');
@@ -2430,12 +2441,10 @@ async function runScenario(idx) {
   document.getElementById('citizen-bubble').className='citizen-bubble';
   document.getElementById('citizen-bubble').innerHTML='<span class="placeholder">Listening...</span>';
 
-  // Start call setup
-  if(!STATE.timerStart) {
-    startTimer();
-    document.getElementById('session-id-display').textContent=STATE.sessionId;
-    document.getElementById('h-calls').textContent='1';
-  }
+  // Start call setup — always reset and start fresh for each scenario
+  startTimer();
+  document.getElementById('session-id-display').textContent=STATE.sessionId;
+  document.getElementById('h-calls').textContent='1';
 
   // Update status
   document.getElementById('status-emoji').textContent='📞';
@@ -2779,6 +2788,7 @@ setInterval(syncInsights, 5000);
         <li><a href="#section-call-logs" onclick="smoothTo('section-call-logs');return false;">Call Logs</a></li>
         <li><a href="#section-ai-insights" onclick="smoothTo('section-ai-insights');return false;">AI Insights</a></li>
         <li><span class="no-link">System Status <span id="footer-status-dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#12C882;margin-left:4px;vertical-align:middle" title="System Online"></span></span></li>
+        <li><a href="#" onclick="location.reload();return false;" style="color:#FF5252">Agent Logout</a></li>
       </ul>
     </div>
 
