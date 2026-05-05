@@ -2686,12 +2686,23 @@ function citizenCorrected() {
   addTranscript('citizen','❌ ಇಲ್ಲ / नहीं / No — correction needed');
   setStep('ps-verify','error');
   updateStats();
-  toast('✏️ Please correct the AI understanding below.','amber');
 
-  // Show correction box, hide main buttons
-  document.getElementById('correction-box').className = 'correction-box show';
+  // Keep verif-block visible so correction box inside it shows
+  document.getElementById('verif-block').className = 'verif-block show';
+
+  // Hide the 3 main buttons, show correction box
+  document.getElementById('verif-btns-main').style.display = 'none';
+  const box = document.getElementById('correction-box');
+  box.className = 'correction-box show';
+
+  // Pre-fill with AI's current understanding
   document.getElementById('correction-text').value = STATE.lastResult?.interpreted_issue || '';
-  document.getElementById('correction-text').focus();
+
+  // Scroll correction box into view
+  setTimeout(() => {
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    document.getElementById('correction-text').focus();
+  }, 100);
 }
 
 function selectCorrectionIssue(btn, issue) {
@@ -2761,6 +2772,10 @@ async function submitCorrection() {
 
   // Reset correction issue buttons
   document.querySelectorAll('.correction-issue-btn').forEach(b => b.classList.remove('selected'));
+
+  // Restore main buttons, hide correction box
+  document.getElementById('verif-btns-main').style.display = 'flex';
+  document.getElementById('correction-box').className = 'correction-box';
 
   addTranscript('ai', '🔄 Updated verification: ' + newQ);
   toast('🔄 AI updated! Please verify again with citizen.','amber');
