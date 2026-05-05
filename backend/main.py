@@ -1359,6 +1359,50 @@ body {
 @media(max-width:900px){ .gov-footer-top{ grid-template-columns:1fr 1fr; } }
 @media(max-width:560px){ .gov-footer-top{ grid-template-columns:1fr; padding:24px 20px; } .gov-footer-bottom{ padding:12px 20px; } }
 
+
+/* ════ CORRECTION BOX ════ */
+.correction-box {
+  display:none; margin-top:14px;
+  background:linear-gradient(135deg,rgba(217,119,0,0.08),rgba(224,32,32,0.06));
+  border:1.5px solid rgba(217,119,0,0.3);
+  border-radius:14px; padding:16px;
+  animation: pop-in 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+.correction-box.show { display:block; }
+.correction-box-title {
+  font-size:11px; font-weight:700; letter-spacing:1px;
+  text-transform:uppercase; color:var(--amber);
+  margin-bottom:10px; display:flex; align-items:center; gap:7px;
+}
+.correction-issue-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-bottom:12px;
+}
+.correction-issue-btn {
+  background:var(--surface); border:1.5px solid var(--line);
+  border-radius:10px; padding:8px 6px; font-size:11px; font-weight:600;
+  color:var(--ink2); cursor:pointer; text-align:center;
+  transition:all 0.15s; font-family:var(--font);
+}
+.correction-issue-btn:hover { border-color:var(--amber); color:var(--amber); background:rgba(217,119,0,0.06); }
+.correction-issue-btn.selected { border-color:var(--amber); background:rgba(217,119,0,0.12); color:var(--amber); }
+.correction-text-area {
+  width:100%; border:1.5px solid var(--line); border-radius:10px;
+  padding:10px 12px; font-size:13px; font-family:var(--font);
+  color:var(--ink); background:var(--surface); resize:none;
+  outline:none; transition:border-color 0.2s; margin-bottom:10px;
+  box-sizing:border-box;
+}
+.correction-text-area:focus { border-color:var(--amber); }
+.correction-submit-btn {
+  width:100%; background:linear-gradient(135deg,var(--amber),#c46b00);
+  border:none; border-radius:10px; padding:11px;
+  font-size:13px; font-weight:700; color:#fff; cursor:pointer;
+  font-family:var(--font); transition:opacity 0.2s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.correction-submit-btn:hover { opacity:0.88; }
+.correction-submit-btn:disabled { opacity:0.5; cursor:not-allowed; }
+
 </style>
 </head>
 <body>
@@ -1707,10 +1751,28 @@ body {
             <div class="verif-label">AI Asks the Citizen</div>
           </div>
           <div class="verif-q" id="verif-q"></div>
-          <div class="verif-btns">
+          <div class="verif-btns" id="verif-btns-main">
             <button class="vbtn vbtn-yes" onclick="citizenConfirmed()">✅ Citizen Says Yes</button>
             <button class="vbtn vbtn-no" onclick="citizenCorrected()">❌ Needs Correction</button>
             <button class="vbtn vbtn-escalate" onclick="triggerEscalation()">⬆️ Escalate to Human</button>
+          </div>
+
+          <!-- Correction Box — shown after Needs Correction -->
+          <div class="correction-box" id="correction-box">
+            <div class="correction-box-title">✏️ What did AI misunderstand?</div>
+            <div class="correction-issue-grid">
+              <button class="correction-issue-btn" onclick="selectCorrectionIssue(this,'Ration Card Issue')">🏷️ Ration Card</button>
+              <button class="correction-issue-btn" onclick="selectCorrectionIssue(this,'Pension Issue')">👴 Pension</button>
+              <button class="correction-issue-btn" onclick="selectCorrectionIssue(this,'Water Supply Issue')">💧 Water Supply</button>
+              <button class="correction-issue-btn" onclick="selectCorrectionIssue(this,'Emergency')">🚑 Emergency</button>
+              <button class="correction-issue-btn" onclick="selectCorrectionIssue(this,'Land Records')">📜 Land Records</button>
+              <button class="correction-issue-btn" onclick="selectCorrectionIssue(this,'Other Issue')">📋 Other</button>
+            </div>
+            <textarea class="correction-text-area" id="correction-text" rows="2"
+              placeholder="Or type the correct issue in your own words..."></textarea>
+            <button class="correction-submit-btn" id="correction-submit-btn" onclick="submitCorrection()">
+              🔁 Re-run AI with Correction
+            </button>
           </div>
         </div>
       </div>
@@ -2622,13 +2684,90 @@ function citizenCorrected() {
   }).then(()=>setTimeout(syncInsights, 500)).catch(()=>{});
   addLog('fix','Misunderstanding — citizen corrected AI');
   addTranscript('citizen','❌ ಇಲ್ಲ / नहीं / No — correction needed');
-  document.getElementById('verif-block').className='verif-block';
   setStep('ps-verify','error');
-  document.getElementById('mic-status').textContent='🔁 Re-listening...';
   updateStats();
-  toast('🔁 Correction logged. AI learning updated.','amber');
-  if(STATE.corrections>=2) {
-    setTimeout(()=> showEscalation('Repeated misunderstanding — AI recommends human takeover'), 800);
+  toast('✏️ Please correct the AI understanding below.','amber');
+
+  // Show correction box, hide main buttons
+  document.getElementById('correction-box').className = 'correction-box show';
+  document.getElementById('correction-text').value = STATE.lastResult?.interpreted_issue || '';
+  document.getElementById('correction-text').focus();
+}
+
+function selectCorrectionIssue(btn, issue) {
+  // Highlight selected button
+  document.querySelectorAll('.correction-issue-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('correction-text').value = issue;
+}
+
+async function submitCorrection() {
+  const correctedText = document.getElementById('correction-text').value.trim();
+  if (!correctedText) {
+    toast('⚠️ Please enter or select the correct issue first.','amber');
+    return;
+  }
+
+  const btn = document.getElementById('correction-submit-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Re-running AI...';
+
+  // Hide correction box
+  document.getElementById('correction-box').className = 'correction-box';
+
+  // Log the correction
+  addTranscript('agent', '✏️ Correction: ' + correctedText);
+  addLog('fix', 'Corrected to: ' + correctedText.slice(0,50));
+
+  // Save corrected version to DB
+  fetch('/feedback', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      session_id: STATE.sessionId, type: 'correct',
+      original: STATE.lastResult?.interpreted_issue || '',
+      corrected: correctedText, language: STATE.lastResult?.language || 'Kannada'
+    })
+  }).catch(()=>{});
+
+  // Update summary display with corrected understanding
+  document.getElementById('summary-english').textContent = correctedText;
+  document.getElementById('summary-native').textContent = '🔄 ' + correctedText;
+
+  // Reset pipeline to re-verify
+  resetSteps();
+  await new Promise(r => setTimeout(r, 600));
+  setStep('ps-ai','done');
+  await new Promise(r => setTimeout(r, 400));
+  setStep('ps-verify','active');
+
+  // Build new verification question with corrected issue
+  const lang = STATE.lastResult?.language || 'Kannada';
+  let newQ = '';
+  if (lang === 'Kannada' || lang === 'kannada') {
+    newQ = `ನಿಮ್ಮ ಸಮಸ್ಯೆ "${correctedText}" ಎಂದು ನಾನು ಅರ್ಥಮಾಡಿಕೊಂಡಿದ್ದೇನೆ. ಇದು ಸರಿಯಾಗಿದೆಯೇ?`;
+  } else if (lang === 'Hindi' || lang === 'hindi') {
+    newQ = `मैं समझा कि आपकी समस्या "${correctedText}" है। क्या यह सही है?`;
+  } else {
+    newQ = `I now understand your issue is: "${correctedText}". Is that correct?`;
+  }
+
+  document.getElementById('verif-q').textContent = newQ;
+  document.getElementById('verif-block').className = 'verif-block show';
+  setStep('ps-verify','done');
+
+  // Re-enable buttons for another round
+  btn.disabled = false;
+  btn.innerHTML = '🔁 Re-run AI with Correction';
+
+  // Reset correction issue buttons
+  document.querySelectorAll('.correction-issue-btn').forEach(b => b.classList.remove('selected'));
+
+  addTranscript('ai', '🔄 Updated verification: ' + newQ);
+  toast('🔄 AI updated! Please verify again with citizen.','amber');
+  updateStats();
+
+  if (STATE.corrections >= 2) {
+    setTimeout(() => showEscalation('Repeated misunderstanding — AI recommends human takeover'), 1200);
   }
 }
 
