@@ -1,4 +1,5 @@
 # VaaNi — AI for Smart Multilingual Helpline Assistance
+
 ### Prototype for Karnataka 1092 Helpline (AI for Bharat Hackathon)
 
 > **"Understanding comes before action"**
@@ -8,9 +9,11 @@
 
 🌐 **Live Demo:** [vaani-ai-for-smart-multilingual-helpline.onrender.com](https://vaani-ai-for-smart-multilingual-helpline.onrender.com)
 
+
 ## What is VaaNi?
 
 VaaNi (ವಾಣಿ) is a real-time AI voice-to-voice assistant that acts as an intelligent interpreter layer between citizens and government agents. It ensures accurate understanding is verified before any response is given.
+
 
 ### Core Flow
 
@@ -22,6 +25,7 @@ Citizen Speaks  →  AI Interprets  →  AI Verifies  →  Agent Responds
                                     If unclear or distress:
                                     Human Takeover (seamless)
 ```
+
 
 ## Features
 
@@ -50,11 +54,15 @@ vaani/
 
 ---
 
+
 ## Local Setup
 
+
 ### Prerequisites
+
 - Python 3.8+ (`py --version`)
 - pip
+
 
 ### Installation
 
@@ -72,11 +80,13 @@ py main.py
 
 Open your browser at: `http://localhost:8000`
 
+
 ### Windows — One Click Start
 
 Double-click `START_VAANI.bat` — it installs nothing, just starts the server and opens the browser automatically.
 
 ---
+
 
 ## Tech Stack
 
