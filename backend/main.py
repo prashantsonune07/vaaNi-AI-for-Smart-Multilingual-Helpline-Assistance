@@ -2087,12 +2087,20 @@ function resetSteps() {
 function addTranscript(role, text) {
   const list = document.getElementById('transcript-list');
   const first = list.querySelector('div[style]');
-  if(first) list.innerHTML='';
-  const item = document.createElement('div');
-  item.className='t-item';
-  item.innerHTML=`<span class="t-role ${role}">${role.toUpperCase()}</span><span class="t-text">${text}</span>`;
-  list.appendChild(item);
-  list.scrollTop=list.scrollHeight;
+  if(first) first.remove();
+  const ts = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const div = document.createElement('div');
+  div.className = 'transcript-item transcript-'+role;
+  div.innerHTML = `<span class="t-role">${role}</span><span class="t-text">${text}</span><span class="t-time">${ts}</span>`;
+  list.appendChild(div);
+  list.scrollTop = list.scrollHeight;
+  // Save to DB
+  if(STATE.sessionId) {
+    fetch('/transcript', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({session_id: STATE.sessionId, role, content: text})
+    }).catch(()=>{});
+  }
 }
 
 function addLog(type, text) {
@@ -3131,25 +3139,49 @@ async def record_feedback(request: Request):
     original = body.get("original", "")
     corrected = body.get("corrected", "")
     language = body.get("language", "kannada")
-    session = sessions.get(session_id, {})
+    now = datetime.now().isoformat()
     db = get_db()
+    # Ensure session exists in DB (create if missing — handles in-memory loss on Render restart)
+    db.execute("INSERT OR IGNORE INTO sessions (id, language, start_time) VALUES (?, ?, ?)",
+               (session_id, language, now))
     if feedback_type == "confirm":
-        session["verified_count"] = session.get("verified_count", 0) + 1
-        db.execute("UPDATE sessions SET verified_count=? WHERE id=?", (session["verified_count"], session_id))
+        db.execute("UPDATE sessions SET verified_count = COALESCE(verified_count,0)+1 WHERE id=?", (session_id,))
         db.execute("INSERT INTO learning_log (session_id, type, original, language, timestamp) VALUES (?, ?, ?, ?, ?)",
-                   (session_id, "confirm", original, language, datetime.now().isoformat()))
+                   (session_id, "confirm", original, language, now))
+        # Also update in-memory if present
+        if session_id in sessions:
+            sessions[session_id]["verified_count"] = sessions[session_id].get("verified_count",0)+1
     elif feedback_type == "correct":
-        session["correction_count"] = session.get("correction_count", 0) + 1
-        db.execute("UPDATE sessions SET correction_count=? WHERE id=?", (session["correction_count"], session_id))
+        db.execute("UPDATE sessions SET correction_count = COALESCE(correction_count,0)+1 WHERE id=?", (session_id,))
         db.execute("INSERT INTO learning_log (session_id, type, original, corrected, language, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
-                   (session_id, "correct", original, corrected, language, datetime.now().isoformat()))
+                   (session_id, "correct", original, corrected, language, now))
+        if session_id in sessions:
+            sessions[session_id]["correction_count"] = sessions[session_id].get("correction_count",0)+1
     elif feedback_type == "escalate":
-        session["escalated"] = True
         db.execute("UPDATE sessions SET escalated=1 WHERE id=?", (session_id,))
         db.execute("INSERT INTO learning_log (session_id, type, original, language, timestamp) VALUES (?, ?, ?, ?, ?)",
-                   (session_id, "escalate", original, language, datetime.now().isoformat()))
+                   (session_id, "escalate", original, language, now))
+        if session_id in sessions:
+            sessions[session_id]["escalated"] = True
     db.commit(); db.close()
     return {"status": "recorded"}
+
+@app.post("/transcript")
+async def save_transcript(request: Request):
+    body = await request.json()
+    session_id = body.get("session_id", "")
+    role = body.get("role", "system")
+    text = body.get("content", "")
+    if not session_id or not text: return {"status": "skipped"}
+    now = datetime.now().isoformat()
+    db = get_db()
+    # Ensure session exists
+    db.execute("INSERT OR IGNORE INTO sessions (id, language, start_time) VALUES (?, ?, ?)",
+               (session_id, "unknown", now))
+    db.execute("INSERT INTO transcripts (session_id, role, content, timestamp) VALUES (?, ?, ?, ?)",
+               (session_id, role, text, now))
+    db.commit(); db.close()
+    return {"status": "saved"}
 
 @app.get("/stats")
 async def get_stats():
@@ -3274,7 +3306,7 @@ async function login(){const p=document.getElementById('pi').value;const r=await
 function logout(){PWD='';document.getElementById('lp').style.display='block';document.getElementById('ap').style.display='none';}
 function sw(n,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));el.classList.add('on');document.getElementById('t-'+n).classList.add('on');}
 function loadAll(){loadSessions();loadTranscripts();loadLearning();loadUsers();buildApi();}
-async function loadSessions(){const r=await fetch(B+'/admin/sessions?pwd='+PWD);const d=await r.json();document.getElementById('s1').textContent=d.stats.total;document.getElementById('s2').textContent=d.stats.confirmed;document.getElementById('s3').textContent=d.stats.corrections;document.getElementById('s4').textContent=d.stats.accuracy+'%';document.getElementById('sb').innerHTML=d.sessions.map(s=>`<tr><td style="font-family:monospace;font-size:10px">${s.id}</td><td><span class="b bb">${s.language||'-'}</span></td><td>${s.issue_category||'-'}</td><td>${s.emotion||'-'}</td><td>${s.confidence?(s.confidence*100).toFixed(0)+'%':'-'}</td><td><span class="b bg">${s.verified_count||0}</span></td><td><span class="b br">${s.correction_count||0}</span></td><td>${s.escalated?'<span class="b br">YES</span>':'<span class="b bg">NO</span>'}</td><td style="font-size:10px;color:#888">${(s.start_time||'').slice(11,19)}</td></tr>`).join('')||'<tr><td colspan="9" style="text-align:center;color:#aaa;padding:20px">No sessions yet</td></tr>';}
+async function loadSessions(){try{const r=await fetch(B+'/admin/sessions?pwd='+PWD);if(!r.ok){document.getElementById('sb').innerHTML='<tr><td colspan="9" style="text-align:center;color:#e53;padding:20px">Error: '+r.status+' — check password</td></tr>';return;}const d=await r.json();document.getElementById('s1').textContent=d.stats.total;document.getElementById('s2').textContent=d.stats.confirmed;document.getElementById('s3').textContent=d.stats.corrections;document.getElementById('s4').textContent=d.stats.accuracy+'%';document.getElementById('sb').innerHTML=d.sessions.map(s=>`<tr><td style="font-family:monospace;font-size:10px">${s.id}</td><td><span class="b bb">${s.language||'-'}</span></td><td>${s.issue_category||'-'}</td><td>${s.emotion||'-'}</td><td>${s.confidence?(s.confidence*100).toFixed(0)+'%':'-'}</td><td><span class="b bg">${s.verified_count||0}</span></td><td><span class="b br">${s.correction_count||0}</span></td><td>${s.escalated?'<span class="b br">YES</span>':'<span class="b bg">NO</span>'}</td><td style="font-size:10px;color:#888">${(s.start_time||'').slice(11,19)}</td></tr>`).join('')||'<tr><td colspan="9" style="text-align:center;color:#aaa;padding:20px">No sessions yet</td></tr>';}catch(e){document.getElementById('sb').innerHTML='<tr><td colspan="9" style="text-align:center;color:#e53;padding:20px">Network error</td></tr>';}}
 async function loadTranscripts(){const r=await fetch(B+'/admin/transcripts?pwd='+PWD);const d=await r.json();document.getElementById('tb').innerHTML=d.map(t=>`<tr><td style="font-family:monospace;font-size:10px">${t.session_id}</td><td><span class="b ${t.role==='citizen'?'ba':t.role==='ai'?'bb':'bg'}">${t.role}</span></td><td style="max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.content}">${t.content}</td><td style="font-size:10px;color:#888">${(t.timestamp||'').slice(11,19)}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:#aaa;padding:20px">No transcripts</td></tr>';}
 async function loadLearning(){const r=await fetch(B+'/admin/learning?pwd='+PWD);const d=await r.json();document.getElementById('lb').innerHTML=d.map(l=>`<tr><td><span class="b ${l.type==='confirm'?'bg':'br'}">${l.type}</span></td><td style="font-family:monospace;font-size:10px">${l.session_id}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis">${l.original||'-'}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis">${l.corrected||'-'}</td><td>${l.language||'-'}</td><td style="font-size:10px;color:#888">${(l.timestamp||'').slice(11,19)}</td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:#aaa;padding:20px">No data</td></tr>';}
 async function loadUsers(){const r=await fetch(B+'/admin/users?pwd='+PWD);const d=await r.json();document.getElementById('ub').innerHTML=d.map(u=>`<tr><td style="font-family:monospace">${u.username}</td><td>${u.full_name||'-'}</td><td><span class="b bb">${u.role}</span></td><td style="font-size:10px;color:#888">${(u.created_at||'').slice(0,10)}</td></tr>`).join('')||'<tr><td colspan="4" style="color:#aaa;padding:12px">No users</td></tr>';}
